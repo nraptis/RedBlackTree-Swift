@@ -25,6 +25,17 @@
 // if you are building some type of fancy priority queue or combining
 // data structures into a custom container class.
 
+// Here is your core functionality. The only functions which should be called:
+
+// var count: Int { return _count }
+// public func contains(_ target: Int) -> Bool
+// public func insert(_ value: Int)
+// public func remove(_ target: Int)
+// public func minElement() -> Int?
+// public func popMin() -> Int?
+// public func maxElement() -> Int?
+// public func popMax() -> Int?
+
 import Foundation
 
 public class RedBlackTreeNode {
@@ -42,30 +53,14 @@ public class RedBlackTreeNode {
         return result
     }
     
-    internal var left: RedBlackTreeNode!
-    internal var right: RedBlackTreeNode!
+    fileprivate var left: RedBlackTreeNode!
+    fileprivate var right: RedBlackTreeNode!
     
-    public var value: Int
+    fileprivate var value: Int
     
     //0 = red
     //1 = black
-    internal var color: Int = 0
-}
-
-extension RedBlackTreeNode: Comparable {
-    public static func < (lhs: RedBlackTreeNode, rhs: RedBlackTreeNode) -> Bool {
-        return lhs.value < rhs.value
-    }
-    
-    public static func == (lhs: RedBlackTreeNode, rhs: RedBlackTreeNode) -> Bool {
-        return lhs.value == rhs.value
-    }
-}
-
-extension RedBlackTreeNode: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(value)
-    }
+    fileprivate var color: Int = 0
 }
 
 extension RedBlackTreeNode: CustomStringConvertible {
@@ -74,53 +69,89 @@ extension RedBlackTreeNode: CustomStringConvertible {
     }
 }
 
+// Core:
 public class RedBlackTree {
     
     internal var _root: RedBlackTreeNode!
     
     fileprivate var _count = 0
-    var count: Int {
-        return _count
-    }
-    
-    required init() {
-        
-    }
-}
+    var count: Int { return _count }
 
-extension RedBlackTree {
-    
-    public func contains(_ target: RedBlackTreeNode?) -> Bool {
+    public func contains(_ target: Int) -> Bool {
         return _search(target) !== nil
     }
     
-    fileprivate func _search(_ target: RedBlackTreeNode?) -> RedBlackTreeNode? {
-        if let target = target {
-            var node: RedBlackTreeNode! = _root
-            while node != nil {
-                if node == target {
-                    return node
-                } else if target < node {
-                    node = node.left
-                } else {
-                    node = node.right
-                }
+    public func insert(_ value: Int) {
+        let node = RedBlackTreeNode(value)
+        _root = _insert(_root, node)
+        _root.color = 1
+        _count += 1
+    }
+    
+    public func remove(_ target: Int) {
+        if let node = _search(target) {
+            if _isBlack(_root.left) && _isBlack(_root.right) { _root.color = 0 }
+            _root = _remove(_root, node)
+            if _root !== nil { _root.color = 1 }
+            _count -= 1
+        }
+    }
+    
+    public func minElement() -> Int? {
+        guard _root !== nil else { return nil }
+        var result: RedBlackTreeNode! = _root
+        while result.left !== nil { result = result.left }
+        return result.value
+    }
+    
+    public func popMin() -> Int? {
+        guard _root !== nil else { return nil }
+        let result: RedBlackTreeNode! = _minElement()
+        if _isBlack(_root.left) && _isBlack(_root.right) { _root.color = 0 }
+        _root = _popMin(_root)
+        if _root !== nil { _root.color = 1 }
+        _count -= 1
+        return result.value
+    }
+    
+    public func maxElement() -> Int? {
+        guard _root !== nil else { return nil }
+        var result: RedBlackTreeNode! = _root
+        while result.right !== nil { result = result.right }
+        return result.value
+    }
+    
+    public func popMax() -> Int? {
+        guard _root !== nil else { return nil }
+        let result: RedBlackTreeNode! = _maxElement()
+        if _isBlack(_root.left) && _isBlack(_root.right) { _root.color = 0 }
+        _root = _popMax(_root)
+        if _root !== nil { _root.color = 1 }
+        _count -= 1
+        return result.value
+    }
+}
+
+// Search helpers
+extension RedBlackTree {
+    fileprivate func _search(_ target: Int) -> RedBlackTreeNode? {
+        var node: RedBlackTreeNode! = _root
+        while node != nil {
+            if node.value == target {
+                return node
+            } else if target < node.value {
+                node = node.left
+            } else {
+                node = node.right
             }
         }
         return nil
     }
 }
 
+// Insert helpers
 extension RedBlackTree {
-    
-    internal func insert(_ node: RedBlackTreeNode) {
-        _root = _insert(_root, node)
-        _root.color = 1
-        _count += 1
-    }
-    
-    internal func _insert(_ root: RedBlackTreeNode?, _ node: RedBlackTreeNode) -> RedBlackTreeNode {
-        
+    fileprivate func _insert(_ root: RedBlackTreeNode?, _ node: RedBlackTreeNode) -> RedBlackTreeNode {
         if root === nil {
             node.color = 0
             return node
@@ -128,9 +159,9 @@ extension RedBlackTree {
         
         var root = root!
         
-        if node < root {
+        if node.value < root.value {
             root.left = _insert(root.left, node)
-        } else if node > root {
+        } else if node.value > root.value {
             root.right = _insert(root.right, node)
         }
         
@@ -150,19 +181,11 @@ extension RedBlackTree {
     }
 }
 
+// Remove helpers
 extension RedBlackTree {
-    internal func remove(_ target: RedBlackTreeNode?) {
-        if let node = _search(target) {
-            if _isBlack(_root.left) && _isBlack(_root.right) { _root.color = 0 }
-            _root = _remove(_root, node)
-            if _root !== nil { _root.color = 1 }
-            _count -= 1
-        }
-    }
-    
-    internal func _remove(_ root: RedBlackTreeNode, _ node: RedBlackTreeNode) -> RedBlackTreeNode? {
+    fileprivate func _remove(_ root: RedBlackTreeNode, _ node: RedBlackTreeNode) -> RedBlackTreeNode? {
         var root = root
-        if node < root {
+        if node.value < root.value {
             if _isBlack(root.left) && _isBlack(root.left.left) {
                 root = _sendRedLeft(root)
             }
@@ -194,9 +217,9 @@ extension RedBlackTree {
     }
 }
 
+// Min helpers
 extension RedBlackTree {
-    
-    public func minElement() -> RedBlackTreeNode? {
+    fileprivate func _minElement() -> RedBlackTreeNode? {
         guard _root !== nil else {
             return nil
         }
@@ -205,28 +228,6 @@ extension RedBlackTree {
         while result.left !== nil {
             result = result.left
         }
-        return result
-    }
-    
-    public func popMin() -> RedBlackTreeNode? {
-        
-        guard _root !== nil else {
-            return nil
-        }
-        
-        let result: RedBlackTreeNode! = minElement()
-        
-        if _isBlack(_root.left) && _isBlack(_root.right) {
-            _root.color = 0
-        }
-
-        _root = _popMin(_root)
-        
-        if _root !== nil {
-            _root.color = 1
-        }
-        
-        _count -= 1
         return result
     }
     
@@ -254,40 +255,16 @@ extension RedBlackTree {
     }
 }
 
+// Max helpers
 extension RedBlackTree {
-    
-    public func maxElement() -> RedBlackTreeNode? {
-        
+    fileprivate func _maxElement() -> RedBlackTreeNode? {
         guard _root !== nil else {
             return nil
         }
-        
         var result: RedBlackTreeNode! = _root
         while result.right !== nil {
             result = result.right
         }
-        return result
-    }
-    
-    public func popMax() -> RedBlackTreeNode? {
-        
-        guard _root !== nil else {
-            return nil
-        }
-        
-        let result: RedBlackTreeNode! = maxElement()
-        
-        if _isBlack(_root.left) && _isBlack(_root.right) {
-            _root.color = 0
-        }
-
-        _root = _popMax(_root)
-        
-        if _root !== nil {
-            _root.color = 1
-        }
-        
-        _count -= 1
         return result
     }
     
@@ -301,11 +278,9 @@ extension RedBlackTree {
 
     fileprivate func _popMax(_ node: RedBlackTreeNode) -> RedBlackTreeNode? {
         var node = node
-        
         if _isRed(node.left) {
             node = _rotateRight(node)
         }
-
         if node.right === nil {
             return nil
         }
@@ -313,12 +288,12 @@ extension RedBlackTree {
         if _isBlack(node.right) && _isBlack(node.right.left) {
             node = _sendRedRight(node)
         }
-        
         node.right = _popMax(node.right)
         return _balance(node)
     }
 }
 
+// Colored helpers
 extension RedBlackTree {
     fileprivate func _isRed(_ node: RedBlackTreeNode?) -> Bool {
         if let node = node {
@@ -339,13 +314,11 @@ extension RedBlackTree {
         } else {
             node.color = 0
         }
-        
         if node.left.color == 0 {
             node.left.color = 1
         } else {
             node.left.color = 0
         }
-        
         if node.right.color == 0 {
             node.right.color = 1
         } else {
@@ -354,8 +327,8 @@ extension RedBlackTree {
     }
 }
 
+// Housekeeping + tree operations.
 extension RedBlackTree {
-    
     fileprivate func _rotateRight(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
         let transplant: RedBlackTreeNode! = node.left
         node.left = transplant.right
@@ -385,7 +358,6 @@ extension RedBlackTree {
         }
         return node
     }
-    
     fileprivate func _sendRedRight(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
         var node = node
         _invertColors(node)
@@ -396,7 +368,6 @@ extension RedBlackTree {
         }
         return node
     }
-    
     fileprivate func _balance(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
         var node = node
         if _isRed(node.right) {

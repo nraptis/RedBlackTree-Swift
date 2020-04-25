@@ -15,46 +15,21 @@ class RedBlackTreeTests: XCTestCase {
         super.setUp()
     }
     
-    /// Mark: Testing data node comparison reliability
-    
-    func testComparisons1() {
-        let node1 = RedBlackTreeNode(5)
-        let node2 = RedBlackTreeNode(5)
-        if node1 != node2 { XCTFail("basic equality failed") }
-    }
-    
-    func testComparisons2() {
-        let node1 = RedBlackTreeNode(10)
-        let node2 = RedBlackTreeNode(5)
-        if node1 == node2 { XCTFail("basic equality failed") }
-        if node1 < node2 { XCTFail("basic equality failed") }
-        if node2 > node1 { XCTFail("basic equality failed") }
-    }
-    
-    func testComparisons3() {
-        let node1 = RedBlackTreeNode(5)
-        let node2 = RedBlackTreeNode(10)
-        if node1 == node2 { XCTFail("basic equality failed") }
-        if node1 > node2 { XCTFail("basic equality failed") }
-        if node2 < node1 { XCTFail("basic equality failed") }
-    }
-    
     func testInsertion1() {
         let tree = RedBlackTree()
-        let node = spawn(5)
-        tree.insert(node.clone())
+        tree.insert(5)
     }
     
     func testInsertion2() {
         let masterList = generateSequence(15)
         let tree = RedBlackTree()
-        for node in masterList {
-            tree.insert(node.clone())
+        for value in masterList {
+            tree.insert(value)
         }
         //
-        for node in masterList {
-            if !tree.contains(node) {
-                XCTFail("couldnt find node \(node)")
+        for value in masterList {
+            if !tree.contains(value) {
+                XCTFail("couldnt find value \(value)")
                 return
             }
         }
@@ -66,12 +41,12 @@ class RedBlackTreeTests: XCTestCase {
             let permutations = allPermutions(masterList)
             for permutation in permutations {
                 let tree = RedBlackTree()
-                for node in permutation {
-                    tree.insert(node.clone())
+                for value in permutation {
+                    tree.insert(value)
                 }
-                for node in permutation {
-                    if !tree.contains(node) {
-                        XCTFail("couldnt find node \(node)")
+                for value in permutation {
+                    if !tree.contains(value) {
+                        XCTFail("couldnt find value \(value)")
                         return
                     }
                 }
@@ -87,13 +62,13 @@ class RedBlackTreeTests: XCTestCase {
             }
             
             let tree = RedBlackTree()
-            for node in masterList {
-                tree.insert(node.clone())
+            for value in masterList {
+                tree.insert(value)
             }
             
-            for node in masterList {
-                if !tree.contains(node) {
-                    XCTFail("couldnt find node \(node)")
+            for value in masterList {
+                if !tree.contains(value) {
+                    XCTFail("couldnt find value \(value)")
                     return
                 }
             }
@@ -106,13 +81,13 @@ class RedBlackTreeTests: XCTestCase {
             shuffle(&masterList)
             
             let tree = RedBlackTree()
-            for node in masterList {
-                tree.insert(node.clone())
+            for value in masterList {
+                tree.insert(value)
             }
             
-            for node in masterList {
-                if !tree.contains(node) {
-                    XCTFail("couldnt find node \(node)")
+            for value in masterList {
+                if !tree.contains(value) {
+                    XCTFail("couldnt find value \(value)")
                     return
                 }
             }
@@ -121,23 +96,23 @@ class RedBlackTreeTests: XCTestCase {
     
     func testDeletion1() {
         let tree = RedBlackTree()
-        let node = spawn(5)
-        tree.insert(node.clone())
-        tree.remove(node.clone())
-        XCTAssertFalse(tree.contains(node.clone()))
+        let value = 5
+        tree.insert(value)
+        tree.remove(value)
+        XCTAssertFalse(tree.contains(value))
     }
     
     func testDeletion2() {
         let masterList = generateSequence(15)
-        for node in masterList {
+        for value in masterList {
             let tree = RedBlackTree()
             for insert in masterList {
-                tree.insert(insert.clone())
+                tree.insert(insert)
             }
             
-            tree.remove(node.clone())
-            if tree.contains(node) {
-                XCTFail("found deleted node \(node)")
+            tree.remove(value)
+            if tree.contains(value) {
+                XCTFail("found deleted value \(value)")
                 return
             }
         }
@@ -146,179 +121,179 @@ class RedBlackTreeTests: XCTestCase {
     
     func testDeletion3() {
         
-        let s1 = spawn(2)
-        let s2 = spawn(0)
-        let s3 = spawn(1)
-        let s4 = spawn(3)
+        let s1 = 2
+        let s2 = 0
+        let s3 = 1
+        let s4 = 3
         
         let tree = RedBlackTree()
         
-        tree.insert(s1.clone())
-        tree.insert(s2.clone())
-        tree.insert(s3.clone())
-        tree.insert(s4.clone())
+        tree.insert(s1)
+        tree.insert(s2)
+        tree.insert(s3)
+        tree.insert(s4)
         
-        tree.remove(s1.clone())
+        tree.remove(s1)
         
         if tree.contains(s1) {
-            XCTFail("found deleted node \(s1)")
+            XCTFail("found deleted value \(s1)")
         }
         
         if !tree.contains(s2) {
-            XCTFail("lost inserted node \(s2)")
+            XCTFail("lost inserted value \(s2)")
         }
         
         if !tree.contains(s3) {
-            XCTFail("lost inserted node \(s3)")
+            XCTFail("lost inserted value \(s3)")
         }
         
         if !tree.contains(s4) {
-            XCTFail("lost inserted node \(s4)")
+            XCTFail("lost inserted value \(s4)")
         }
     }
     
     func testDeletion4() {
         
-        let s1 = spawn(3)
-        let s2 = spawn(0)
-        let s3 = spawn(2)
-        let s4 = spawn(1)
-        let s5 = spawn(4)
+        let s1 = 3
+        let s2 = 0
+        let s3 = 2
+        let s4 = 1
+        let s5 = 4
         
         let tree = RedBlackTree()
         
-        tree.insert(s1.clone())
-        tree.insert(s2.clone())
-        tree.insert(s3.clone())
-        tree.insert(s4.clone())
-        tree.insert(s5.clone())
-        tree.remove(s1.clone())
+        tree.insert(s1)
+        tree.insert(s2)
+        tree.insert(s3)
+        tree.insert(s4)
+        tree.insert(s5)
+        tree.remove(s1)
         
         if tree.contains(s1) {
-            XCTFail("found deleted node \(s1)")
+            XCTFail("found deleted value \(s1)")
         }
         
         if !tree.contains(s2) {
-            XCTFail("lost inserted node \(s2)")
+            XCTFail("lost inserted value \(s2)")
         }
         
         if !tree.contains(s3) {
-            XCTFail("lost inserted node \(s3)")
+            XCTFail("lost inserted value \(s3)")
         }
         
         if !tree.contains(s4) {
-            XCTFail("lost inserted node \(s4)")
+            XCTFail("lost inserted value \(s4)")
         }
         
         if !tree.contains(s5) {
-            XCTFail("lost inserted node \(s4)")
+            XCTFail("lost inserted value \(s4)")
         }
     }
     
     func testDeletion5() {
         
-        let s1 = spawn(1)
-        let s2 = spawn(2)
-        let s3 = spawn(0)
+        let s1 = 1
+        let s2 = 2
+        let s3 = 0
         
         let tree = RedBlackTree()
         
-        tree.insert(s1.clone())
-        tree.insert(s2.clone())
-        tree.insert(s3.clone())
+        tree.insert(s1)
+        tree.insert(s2)
+        tree.insert(s3)
         
-        tree.remove(s3.clone())
-        tree.remove(s1.clone())
+        tree.remove(s3)
+        tree.remove(s1)
         
         if tree.contains(s1) {
-            XCTFail("found deleted node \(s1)")
+            XCTFail("found deleted value \(s1)")
         }
         
         if !tree.contains(s2) {
-            XCTFail("lost inserted node \(s2)")
+            XCTFail("lost inserted value \(s2)")
         }
         
         if tree.contains(s3) {
-            XCTFail("found deleted node \(s1)")
+            XCTFail("found deleted value \(s1)")
         }
     }
     
     func testDeletion6() {
         
-        let s1 = spawn(1)
-        let s2 = spawn(2)
-        let s3 = spawn(0)
-        let s4 = spawn(5)
-        let s5 = spawn(3)
-        let s6 = spawn(4)
+        let s1 = 1
+        let s2 = 2
+        let s3 = 0
+        let s4 = 5
+        let s5 = 3
+        let s6 = 4
         
         let tree = RedBlackTree()
         
-        tree.insert(s1.clone())
-        tree.insert(s2.clone())
-        tree.insert(s3.clone())
-        tree.insert(s4.clone())
-        tree.insert(s5.clone())
-        tree.insert(s6.clone())
+        tree.insert(s1)
+        tree.insert(s2)
+        tree.insert(s3)
+        tree.insert(s4)
+        tree.insert(s5)
+        tree.insert(s6)
         
-        tree.remove(s3.clone())
-        tree.remove(s5.clone())
+        tree.remove(s3)
+        tree.remove(s5)
         
         if tree.contains(s3) {
-            XCTFail("found deleted node \(s3)")
+            XCTFail("found deleted value \(s3)")
         }
         
         if tree.contains(s5) {
-            XCTFail("found deleted node \(s5)")
+            XCTFail("found deleted value \(s5)")
         }
         
         if !tree.contains(s1) {
-            XCTFail("lost inserted node \(s1)")
+            XCTFail("lost inserted value \(s1)")
         }
         
         if !tree.contains(s2) {
-            XCTFail("lost inserted node \(s2)")
+            XCTFail("lost inserted value \(s2)")
         }
         
         if !tree.contains(s4) {
-            XCTFail("lost inserted node \(s4)")
+            XCTFail("lost inserted value \(s4)")
         }
         
         if tree.contains(s5) {
-            XCTFail("found deleted node \(s5)")
+            XCTFail("found deleted value \(s5)")
         }
     }
     
     func testDeletion7() {
         
-        let s1 = spawn(1)
-        let s2 = spawn(2)
-        let s3 = spawn(3)
-        let s4 = spawn(0)
+        let s1 = 1
+        let s2 = 2
+        let s3 = 3
+        let s4 = 0
         
         let tree = RedBlackTree()
         
-        tree.insert(s1.clone())
-        tree.insert(s2.clone())
-        tree.insert(s3.clone())
-        tree.insert(s4.clone())
+        tree.insert(s1)
+        tree.insert(s2)
+        tree.insert(s3)
+        tree.insert(s4)
         
-        tree.remove(s2.clone())
+        tree.remove(s2)
         
         if tree.contains(s2) {
-            XCTFail("found deleted node \(s2)")
+            XCTFail("found deleted value \(s2)")
         }
         
         if !tree.contains(s1) {
-            XCTFail("lost inserted node \(s1)")
+            XCTFail("lost inserted value \(s1)")
         }
         
         if !tree.contains(s3) {
-            XCTFail("lost inserted node \(s3)")
+            XCTFail("lost inserted value \(s3)")
         }
         
         if !tree.contains(s4) {
-            XCTFail("lost inserted node \(s4)")
+            XCTFail("lost inserted value \(s4)")
         }
     }
     
@@ -329,17 +304,17 @@ class RedBlackTreeTests: XCTestCase {
             for permutation in permutations {
                 
                 for deletionTarget in masterList {
-                    let clone = deletionTarget.clone()
+                    let clone = deletionTarget
                     
                     let tree = RedBlackTree()
-                    for node in permutation {
-                        tree.insert(node.clone())
+                    for value in permutation {
+                        tree.insert(value)
                     }
                     
                     tree.remove(clone)
                     
                     if tree.contains(clone) {
-                        XCTFail("found deleted node \(clone) \(permutation) {\(clone)}")
+                        XCTFail("found deleted value \(clone) \(permutation) {\(clone)}")
                         return
                     }
                 }
@@ -354,25 +329,25 @@ class RedBlackTreeTests: XCTestCase {
             for permutation in permutations {
                 
                 for deletionTarget1 in masterList {
-                    let clone1 = deletionTarget1.clone()
+                    let clone1 = deletionTarget1
                     for deletionTarget2 in masterList where deletionTarget2 != deletionTarget1 {
-                        let clone2 = deletionTarget2.clone()
+                        let clone2 = deletionTarget2
                         
                         let tree = RedBlackTree()
-                        for node in permutation {
-                            tree.insert(node.clone())
+                        for value in permutation {
+                            tree.insert(value)
                         }
                         
                         tree.remove(clone1)
                         tree.remove(clone2)
                         
                         if tree.contains(clone1) {
-                            XCTFail("found deleted node 1 \(clone1)")
+                            XCTFail("found deleted value 1 \(clone1)")
                             return
                         }
                         
                         if tree.contains(clone2) {
-                            XCTFail("found deleted node 2 \(clone2)")
+                            XCTFail("found deleted value 2 \(clone2)")
                             return
                         }
                     }
@@ -381,44 +356,44 @@ class RedBlackTreeTests: XCTestCase {
         }
     }
     
-    func testBSTAddLargeSequence() {
+    func testAddLargeSequence() {
         for _ in 0..<20 {
             var masterList = generateSequence(25000)
             shuffle(&masterList)
             let tree = RedBlackTree()
-            for node in masterList {
-                tree.insert(node.clone())
+            for value in masterList {
+                tree.insert(value)
             }
             
-            for node in masterList {
-                if !tree.contains(node) {
-                    XCTFail("node not founnd 1 \(node)")
+            for value in masterList {
+                if !tree.contains(value) {
+                    XCTFail("value not founnd 1 \(value)")
                     return
                 }
             }
         }
     }
     
-    func testBSTAddDeleteLargeSequence() {
+    func testAddDeleteLargeSequence() {
         for _ in 0..<20 {
             var masterList = generateSequence(25000)
             shuffle(&masterList)
             let tree = RedBlackTree()
-            for node in masterList {
-                tree.insert(node.clone())
+            for value in masterList {
+                tree.insert(value)
             }
             shuffle(&masterList)
-            for node in masterList {
-                tree.remove(node.clone())
+            for value in masterList {
+                tree.remove(value)
             }
             if tree.count > 0 {
-                XCTFail("Failed to delete all 1M nodes")
+                XCTFail("Failed to delete all 1M values")
                 return
             }
         }
     }
     
-    func testBSTAddDeletionSetMixer() {
+    func testAddDeletionSetMixer() {
         
         // there are just way too many permutations to do them all, so we will
         // just randomize the order a few hundred times. This should be good enough.
@@ -433,27 +408,27 @@ class RedBlackTreeTests: XCTestCase {
                 for deleteList in deleteSets {
                     
                     let tree = RedBlackTree()
-                    for node in masterList {
-                        tree.insert(node.clone())
+                    for value in masterList {
+                        tree.insert(value)
                     }
                     
-                    let deleteSet = Set<RedBlackTreeNode>(deleteList)
-                    let keepSet = Set<RedBlackTreeNode>(masterList).subtracting(deleteSet)
+                    let deleteSet = Set<Int>(deleteList)
+                    let keepSet = Set<Int>(masterList).subtracting(deleteSet)
                     
-                    for node in deleteSet {
-                        tree.remove(node.clone())
+                    for value in deleteSet {
+                        tree.remove(value)
                     }
                     
-                    for node in keepSet {
-                        if !tree.contains(node) {
-                            XCTFail("missing keep node iter \(i) \(node) ks: \(keepSet) ds: \(deleteSet), ml: \(masterList)")
+                    for value in keepSet {
+                        if !tree.contains(value) {
+                            XCTFail("missing keep value iter \(i) \(value) ks: \(keepSet) ds: \(deleteSet), ml: \(masterList)")
                             return
                         }
                     }
                     
-                    for node in deleteSet {
-                        if tree.contains(node) {
-                            XCTFail("retaining delete node iter \(i) \(node) ks: \(keepSet) ds: \(deleteSet), ml: \(masterList)")
+                    for value in deleteSet {
+                        if tree.contains(value) {
+                            XCTFail("retaining delete value iter \(i) \(value) ks: \(keepSet) ds: \(deleteSet), ml: \(masterList)")
                             return
                         }
                     }
@@ -463,22 +438,22 @@ class RedBlackTreeTests: XCTestCase {
         }
     }
     
-    func testBSTAddAllDeleteAllInOrder() {
+    func testAddAllDeleteAllInOrder() {
         for _ in 0..<2000 {
             let masterList = generateMediumOrShortSequence()
             
             let tree = RedBlackTree()
-            for node in masterList {
-                tree.insert(node.clone())
+            for value in masterList {
+                tree.insert(value)
             }
             
-            for node in masterList {
-                tree.remove(node.clone())
+            for value in masterList {
+                tree.remove(value)
             }
             
-            for node in masterList {
-                if tree.contains(node) {
-                    XCTFail("node was retained ml: \(masterList)")
+            for value in masterList {
+                if tree.contains(value) {
+                    XCTFail("value was retained ml: \(masterList)")
                     return
                 }
             }
@@ -490,24 +465,24 @@ class RedBlackTreeTests: XCTestCase {
         }
     }
     
-    func testBSTAddAllDeleteAllAddAllDeleteAll() {
+    func testAddAllDeleteAllAddAllDeleteAll() {
         for _ in 0..<5000 {
             var masterList = generateMediumOrShortSequence()
             
             let tree = RedBlackTree()
-            for node in masterList {
-                tree.insert(node.clone())
+            for value in masterList {
+                tree.insert(value)
             }
             
             shuffle(&masterList)
             
-            for node in masterList {
-                tree.remove(node.clone())
+            for value in masterList {
+                tree.remove(value)
             }
             
-            for node in masterList {
-                if tree.contains(node) {
-                    XCTFail("node was retained ml: \(masterList)")
+            for value in masterList {
+                if tree.contains(value) {
+                    XCTFail("value was retained ml: \(masterList)")
                     return
                 }
             }
@@ -519,78 +494,78 @@ class RedBlackTreeTests: XCTestCase {
         }
     }
     
-    func testBSTSplitAddReAdd() {
+    func testSplitAddReAdd() {
         for _ in 0..<2500 {
             var masterList = generateMediumOrShortSequence()
             
-            //Add all the nodes...
+            //Add all the values...
             let tree = RedBlackTree()
-            for node in masterList {
-                tree.insert(node.clone())
+            for value in masterList {
+                tree.insert(value)
             }
             
-            var half1 = [RedBlackTreeNode]()
-            var half2 = [RedBlackTreeNode]()
+            var half1 = [Int]()
+            var half2 = [Int]()
             randomSplit(&masterList, half1: &half1, half2: &half2)
             
             // delete everything from half 1, make sure they are gone...
-            for node in half1 {
-                tree.remove(node.clone())
+            for value in half1 {
+                tree.remove(value)
             }
             
             //everything in half 2 should still be here...
-            for node in half2 {
-                if !tree.contains(node) {
-                    XCTFail("missing keep node")
+            for value in half2 {
+                if !tree.contains(value) {
+                    XCTFail("missing keep value")
                     return
                 }
             }
             
             //everything in half 1 should be gone...
-            for node in half1 {
-                if tree.contains(node) {
-                    XCTFail("retaining delete node")
+            for value in half1 {
+                if tree.contains(value) {
+                    XCTFail("retaining delete value")
                     return
                 }
              }
             
             // re-add everything from half 1, make sure they are here...
-            for node in half1 {
-                tree.insert(node.clone())
+            for value in half1 {
+                tree.insert(value)
             }
             
             //everything in half 1 should be here...
-            for node in half1 {
-                if !tree.contains(node) {
-                    XCTFail("missing keep node")
+            for value in half1 {
+                if !tree.contains(value) {
+                    XCTFail("missing keep value")
                     return
                 }
              }
             
             //Delete everything from half 1 again...
-            for node in half1 {
-                tree.remove(node.clone())
+            for value in half1 {
+                tree.remove(value)
             }
             
             //everything in half 1 should be gone...
-            for node in half1 {
-                if tree.contains(node) {
-                    XCTFail("retaining delete node")
+            for value in half1 {
+                if tree.contains(value) {
+                    XCTFail("retaining delete value")
                     return
                 }
              }
             
             //everything in half 2 should still be here...
-            for node in half2 {
-                if !tree.contains(node) {
-                    XCTFail("missing keep node")
+            for value in half2 {
+                if !tree.contains(value) {
+                    XCTFail("missing keep value")
                     return
                 }
             }
             
             //Delete everything from half 2
-            for node in half2 {
-                tree.remove(node.clone())
+            for value in half2 {
+                tree.remove(value)
             }
             
             //Everything should be gone.
@@ -600,13 +575,40 @@ class RedBlackTreeTests: XCTestCase {
         }
     }
     
+    func testAddDeleteLargeDisjointSets() {
+        
+        for _ in 0..<200 {
+            var addList = generateLongSequence()
+            stir(&addList)
+            
+            var removeList = generateLongSequence()
+            stir(&removeList)
+            
+            let tree = RedBlackTree()
+            for value in addList {
+                tree.insert(value)
+            }
+            
+            for value in removeList {
+                tree.remove(value)
+            }
+            
+            for value in removeList {
+                if tree.contains(value) {
+                    XCTFail("value was retained")
+                    return
+                }
+            }
+        }
+    }
+    
     func testPopMinBasic() {
         
         let tree = RedBlackTree()
         for length in 1..<10 {
             let masterList = generateSequence(length)
-            for node in masterList {
-                tree.insert(node.clone())
+            for value in masterList {
+                tree.insert(value)
             }
             
             var sortedList = Array(masterList.reversed())
@@ -623,7 +625,7 @@ class RedBlackTreeTests: XCTestCase {
                 i -= 1
             }
             
-            if tree.popMin() !== nil {
+            if tree.popMin() != nil {
                 XCTFail("Dangling min.")
             }
         }
@@ -638,8 +640,8 @@ class RedBlackTreeTests: XCTestCase {
             shuffle(&masterList)
             
             let tree = RedBlackTree()
-            for node in masterList {
-                tree.insert(node.clone())
+            for value in masterList {
+                tree.insert(value)
             }
             
             var sortedList = Array(masterList.sorted().reversed())
@@ -655,7 +657,7 @@ class RedBlackTreeTests: XCTestCase {
                 i -= 1
             }
             
-            if tree.popMin() !== nil {
+            if tree.popMin() != nil {
                 XCTFail("Dangling min.")
             }
         }
@@ -665,8 +667,8 @@ class RedBlackTreeTests: XCTestCase {
         let tree = RedBlackTree()
         for length in 1..<10 {
             let masterList = generateSequence(length)
-            for node in masterList {
-                tree.insert(node.clone())
+            for value in masterList {
+                tree.insert(value)
             }
             
             var sortedList = Array(masterList)
@@ -683,7 +685,7 @@ class RedBlackTreeTests: XCTestCase {
                 i -= 1
             }
             
-            if tree.popMax() !== nil {
+            if tree.popMax() != nil {
                 XCTFail("Dangling max.")
             }
         }
@@ -697,8 +699,8 @@ class RedBlackTreeTests: XCTestCase {
             shuffle(&masterList)
             
             let tree = RedBlackTree()
-            for node in masterList {
-                tree.insert(node.clone())
+            for value in masterList {
+                tree.insert(value)
             }
             
             var sortedList = Array(masterList.sorted())
@@ -715,7 +717,7 @@ class RedBlackTreeTests: XCTestCase {
                 i -= 1
             }
             
-            if tree.popMax() !== nil {
+            if tree.popMax() != nil {
                 XCTFail("Dangling max.")
                 return
             }
@@ -724,14 +726,14 @@ class RedBlackTreeTests: XCTestCase {
     
     func testAutomtonOperations() {
         
-        var addedSet = Set<RedBlackTreeNode>()
-        var deletedSet = Set<RedBlackTreeNode>()
+        var addedSet = Set<Int>()
+        var deletedSet = Set<Int>()
         var spawnIndex: Int = 0
         var tree = RedBlackTree()
         
         automatonAddSomeNodes(&tree, &addedSet, &deletedSet, &spawnIndex)
         
-        for _ in 0..<80 {
+        for _ in 0..<225 {
             let operation = Int(arc4random() & 0x7FFF) % 6
             if operation == 0 {
                 automatonAddSomeNodes(&tree, &addedSet, &deletedSet, &spawnIndex)
@@ -794,8 +796,8 @@ class RedBlackTreeTests: XCTestCase {
     /// Mark: Automata helpers.
     
     func automatonAddSomeNodes(_ tree: inout RedBlackTree,
-                               _ addedSet: inout Set<RedBlackTreeNode>,
-                               _ deletedSet: inout Set<RedBlackTreeNode>,
+                               _ addedSet: inout Set<Int>,
+                               _ deletedSet: inout Set<Int>,
                                _ spawnIndex: inout Int) {
         var count = Int(arc4random() & 0x7FFF) % 20 + 5
         if (Int(arc4random() & 0x7FFF) % 2) == 0 {
@@ -803,21 +805,21 @@ class RedBlackTreeTests: XCTestCase {
         }
         
         for _ in 0..<count {
-            let node = spawn(spawnIndex)
+            let value = spawnIndex
             spawnIndex += 1
-            tree.insert(node.clone())
-            if !tree.contains(node) {
-                XCTFail("Does not have inserted node")
+            tree.insert(value)
+            if !tree.contains(value) {
+                XCTFail("Does not have inserted value")
                 return
             }
-            addedSet.insert(node)
+            addedSet.insert(value)
         }
         automatonVerifyAll(&tree, &addedSet, &deletedSet)
     }
     
     func automatonDeleteSomeNodes(_ tree: inout RedBlackTree,
-                               _ addedSet: inout Set<RedBlackTreeNode>,
-                               _ deletedSet: inout Set<RedBlackTreeNode>,
+                               _ addedSet: inout Set<Int>,
+                               _ deletedSet: inout Set<Int>,
                                _ spawnIndex: inout Int) {
         var count = Int(arc4random() & 0x7FFF) % 20 + 5
         if (Int(arc4random() & 0x7FFF) % 5) == 0 {
@@ -826,9 +828,9 @@ class RedBlackTreeTests: XCTestCase {
         
         for _ in 0..<count {
             if let element = addedSet.randomElement() {
-                tree.remove(element.clone())
+                tree.remove(element)
                 if tree.contains(element) {
-                    XCTFail("Retained the deleted node")
+                    XCTFail("Retained the deleted value")
                     return
                 }
                 addedSet.remove(element)
@@ -841,8 +843,8 @@ class RedBlackTreeTests: XCTestCase {
     }
     
     func automatonReAddDeletedNodes(_ tree: inout RedBlackTree,
-                               _ addedSet: inout Set<RedBlackTreeNode>,
-                               _ deletedSet: inout Set<RedBlackTreeNode>,
+                               _ addedSet: inout Set<Int>,
+                               _ deletedSet: inout Set<Int>,
                                _ spawnIndex: inout Int) {
         var count = Int(arc4random() & 0x7FFF) % 20 + 5
         if (Int(arc4random() & 0x7FFF) % 5) == 0 {
@@ -858,10 +860,10 @@ class RedBlackTreeTests: XCTestCase {
                 let item = deletedArray[index]
                 deletedSet.remove(item)
                 addedSet.insert(item)
-                tree.insert(item.clone())
+                tree.insert(item)
              
                 if !tree.contains(item) {
-                    XCTFail("Does not have inserted node")
+                    XCTFail("Does not have inserted value")
                     return
                 }
             }
@@ -872,8 +874,8 @@ class RedBlackTreeTests: XCTestCase {
     }
     
     func automatonAddAndDelete(_ tree: inout RedBlackTree,
-                               _ addedSet: inout Set<RedBlackTreeNode>,
-                               _ deletedSet: inout Set<RedBlackTreeNode>,
+                               _ addedSet: inout Set<Int>,
+                               _ deletedSet: inout Set<Int>,
                                _ spawnIndex: inout Int) {
         var count = Int(arc4random() & 0x7FFF) % 50 + 10
         if (Int(arc4random() & 0x7FFF) % 5) == 0 {
@@ -881,25 +883,21 @@ class RedBlackTreeTests: XCTestCase {
         }
         
         for _ in 0..<count {
-            
             let type = Int(arc4random() & 0x7FFF) % 2
-            
             if type == 0 {
-                let node = spawn(spawnIndex)
+                let value = spawnIndex
                 spawnIndex += 1
-                tree.insert(node.clone())
-                if !tree.contains(node) {
-                    XCTFail("Does not have inserted node")
+                tree.insert(value)
+                if !tree.contains(value) {
+                    XCTFail("Does not have inserted value")
                     return
                 }
-                addedSet.insert(node)
+                addedSet.insert(value)
             } else {
-
                 if let element = addedSet.randomElement() {
-                    
-                    tree.remove(element.clone())
+                    tree.remove(element)
                     if tree.contains(element) {
-                        XCTFail("Retained the deleted node")
+                        XCTFail("Retained the deleted value")
                         return
                     }
                     addedSet.remove(element)
@@ -911,8 +909,8 @@ class RedBlackTreeTests: XCTestCase {
     }
     
     func automatonPopMin(_ tree: inout RedBlackTree,
-    _ addedSet: inout Set<RedBlackTreeNode>,
-    _ deletedSet: inout Set<RedBlackTreeNode>,
+    _ addedSet: inout Set<Int>,
+    _ deletedSet: inout Set<Int>,
     _ spawnIndex: inout Int) {
         
         var count = Int(arc4random() & 0x7FFF) % 10 + 1
@@ -932,7 +930,7 @@ class RedBlackTreeTests: XCTestCase {
                 addedSet.remove(actualMin)
             } else {
                 let actualMin = tree.popMin()
-                if actualMin !== nil {
+                if actualMin != nil {
                     XCTFail("Wrong min. \(actualMin!) (actual) vs NULL (expected)")
                     return
                 }
@@ -941,8 +939,8 @@ class RedBlackTreeTests: XCTestCase {
     }
     
     func automatonPopMax(_ tree: inout RedBlackTree,
-    _ addedSet: inout Set<RedBlackTreeNode>,
-    _ deletedSet: inout Set<RedBlackTreeNode>,
+    _ addedSet: inout Set<Int>,
+    _ deletedSet: inout Set<Int>,
     _ spawnIndex: inout Int) {
         
         let count = Int(arc4random() & 0x7FFF) % 10 + 1
@@ -959,7 +957,7 @@ class RedBlackTreeTests: XCTestCase {
                 addedSet.remove(actualMax)
             } else {
                 let actualMax = tree.popMax()
-                if actualMax !== nil {
+                if actualMax != nil {
                     XCTFail("Wrong max. \(actualMax!) (actual) vs NULL (expected)")
                     return
                 }
@@ -968,29 +966,29 @@ class RedBlackTreeTests: XCTestCase {
     }
     
     func automatonVerifyAll(_ tree: inout RedBlackTree,
-                            _ addedSet: inout Set<RedBlackTreeNode>,
-                            _ deletedSet: inout Set<RedBlackTreeNode>) {
+                            _ addedSet: inout Set<Int>,
+                            _ deletedSet: inout Set<Int>) {
         automatonVerifyAdded(&tree, &addedSet, &deletedSet)
         automatonVerifyDeleted(&tree, &addedSet, &deletedSet)
     }
     
     func automatonVerifyAdded(_ tree: inout RedBlackTree,
-                               _ addedSet: inout Set<RedBlackTreeNode>,
-                               _ deletedSet: inout Set<RedBlackTreeNode>) {
-        for node in addedSet {
-            if !tree.contains(node) {
-                XCTFail("Automata - failed to find added node")
+                               _ addedSet: inout Set<Int>,
+                               _ deletedSet: inout Set<Int>) {
+        for value in addedSet {
+            if !tree.contains(value) {
+                XCTFail("Automata - failed to find added value")
                 return
             }
         }
     }
     
     func automatonVerifyDeleted(_ tree: inout RedBlackTree,
-                               _ addedSet: inout Set<RedBlackTreeNode>,
-                               _ deletedSet: inout Set<RedBlackTreeNode>) {
-        for node in deletedSet {
-            if tree.contains(node) {
-                XCTFail("Automata - retained a deleted node")
+                               _ addedSet: inout Set<Int>,
+                               _ deletedSet: inout Set<Int>) {
+        for value in deletedSet {
+            if tree.contains(value) {
+                XCTFail("Automata - retained a deleted value")
                 return
             }
         }
@@ -998,49 +996,31 @@ class RedBlackTreeTests: XCTestCase {
     
     /// Mark: Helpers
     
-    func generateData() -> Data {
-        return generateData(1, 160)
-    }
-    
-    func generateData(_ minSize: Int, _ maxSize: Int) -> Data {
-        let range = (maxSize + 1) - minSize
-        var resultSize = minSize
-        if range > 0 { resultSize += Int(arc4random() & 0x7FFF) % range }
-        var result = Data()
-        for _ in 0..<resultSize { result.append(UInt8(arc4random() & 0xFF)) }
-        return result
-    }
-    
-    func spawn(_ value: Int) -> RedBlackTreeNode {
-        let result = RedBlackTreeNode(value)
-        return result
-    }
-    
-    func generateSequence(_ sequenceCount: Int) -> [RedBlackTreeNode] {
-        var result = [RedBlackTreeNode]()
+    func generateSequence(_ sequenceCount: Int) -> [Int] {
+        var result = [Int]()
         if sequenceCount > 0 {
             for i in 0..<sequenceCount {
-                result.append(RedBlackTreeNode(i))
+                result.append(Int(i))
             }
         }
         return result
     }
     
-    func generateShortSequence() -> [RedBlackTreeNode] {
+    func generateShortSequence() -> [Int] {
         let count = Int(arc4random() & 0x7FFF) % 12
         var result = generateSequence(count)
         stir(&result)
         return result
     }
     
-    func generateMediumSequence() -> [RedBlackTreeNode] {
+    func generateMediumSequence() -> [Int] {
         let count = Int(arc4random() & 0x7FFF) % 70 + 24
         var result = generateSequence(count)
         stir(&result)
         return result
     }
     
-    func generateMediumOrShortSequence() -> [RedBlackTreeNode] {
+    func generateMediumOrShortSequence() -> [Int] {
         if (Int(arc4random() & 0x7FFF) % 2) == 0 {
             return generateShortSequence()
         } else {
@@ -1048,75 +1028,81 @@ class RedBlackTreeTests: XCTestCase {
         }
     }
     
-    func randomSplit(_ nodeArray: inout [RedBlackTreeNode], half1: inout [RedBlackTreeNode], half2 : inout [RedBlackTreeNode]) {
+    func generateLongSequence() -> [Int] {
+        let count = Int(arc4random() & 0x7FFF) % 2500 + 800
+        var result = generateSequence(count)
+        stir(&result)
+        return result
+    }
+    
+    func randomSplit(_ valueArray: inout [Int], half1: inout [Int], half2 : inout [Int]) {
         
         half1.removeAll()
         half2.removeAll()
         
-        if nodeArray.count == 0 {
+        if valueArray.count == 0 {
             return
         }
         
-        let splitIndex = Int(arc4random() & 0x7FFF) % nodeArray.count
+        let splitIndex = Int(arc4random() & 0x7FFF) % valueArray.count
         
         if (Int(arc4random() & 0x7FFF) % 2) == 0 {
             var i: Int = 0
             while i < splitIndex {
-                half2.append(nodeArray[i])
+                half2.append(valueArray[i])
                 i += 1
             }
-            while i < nodeArray.count {
-                half1.append(nodeArray[i])
+            while i < valueArray.count {
+                half1.append(valueArray[i])
                 i += 1
             }
         } else {
             var i: Int = 0
             while i < splitIndex {
-                half1.append(nodeArray[i])
+                half1.append(valueArray[i])
                 i += 1
             }
-            while i < nodeArray.count {
-                half2.append(nodeArray[i])
+            while i < valueArray.count {
+                half2.append(valueArray[i])
                 i += 1
             }
         }
     }
     
-    //Assume that the list is sorted.
-    func stir(_ nodeArray: inout [RedBlackTreeNode]) {
-        guard nodeArray.count > 1 else { return }
+    func stir(_ valueArray: inout [Int]) {
+        guard valueArray.count > 1 else { return }
         
         let shuffleMode = Int(arc4random() & 0x7FFF) % 2
         if shuffleMode == 1 {
-            shuffle(&nodeArray)
+            shuffle(&valueArray)
         }
         
         let reverseMode = Int(arc4random() & 0x7FFF) % 2
         if reverseMode == 1 {
-            nodeArray.reverse()
+            valueArray.reverse()
         }
         
         let stirIndex = Int(arc4random() & 0x7FFF) % 8
         if stirIndex == 0 {
-            nodeArray.append(nodeArray.removeFirst())
+            valueArray.append(valueArray.removeFirst())
         } else if stirIndex == 1 {
-            nodeArray.insert(nodeArray.removeLast(), at: 0)
+            valueArray.insert(valueArray.removeLast(), at: 0)
         } else if stirIndex == 2 {
-            nodeArray.append(nodeArray.removeFirst())
-            nodeArray.append(nodeArray.removeFirst())
+            valueArray.append(valueArray.removeFirst())
+            valueArray.append(valueArray.removeFirst())
         } else if stirIndex == 3 {
-            nodeArray.insert(nodeArray.removeLast(), at: 0)
-            nodeArray.insert(nodeArray.removeLast(), at: 0)
+            valueArray.insert(valueArray.removeLast(), at: 0)
+            valueArray.insert(valueArray.removeLast(), at: 0)
         } else {
             
-            var half1 = [RedBlackTreeNode]()
-            var half2 = [RedBlackTreeNode]()
+            var half1 = [Int]()
+            var half2 = [Int]()
             
-            for i in 0..<nodeArray.count {
-                if i <= (nodeArray.count / 2) {
-                    half1.append(nodeArray[i])
+            for i in 0..<valueArray.count {
+                if i <= (valueArray.count / 2) {
+                    half1.append(valueArray[i])
                 } else {
-                    half2.append(nodeArray[i])
+                    half2.append(valueArray[i])
                 }
             }
             
@@ -1130,69 +1116,69 @@ class RedBlackTreeTests: XCTestCase {
                 stir(&half2)
             }
 
-            nodeArray.removeAll()
+            valueArray.removeAll()
             
             if stirIndex == 4 {
-                for node in half1 {
-                    nodeArray.append(node)
+                for value in half1 {
+                    valueArray.append(value)
                 }
-                for node in half2 {
-                    nodeArray.append(node)
+                for value in half2 {
+                    valueArray.append(value)
                 }
             } else if stirIndex == 5 {
-                for node in half2 {
-                    nodeArray.append(node)
+                for value in half2 {
+                    valueArray.append(value)
                 }
-                for node in half1 {
-                    nodeArray.append(node)
+                for value in half1 {
+                    valueArray.append(value)
                 }
             } else if stirIndex == 6 {
-                for node in half2 {
-                    nodeArray.append(node)
+                for value in half2 {
+                    valueArray.append(value)
                 }
-                for node in half1 {
-                    nodeArray.append(node)
+                for value in half1 {
+                    valueArray.append(value)
                 }
             } else {
                 var i: Int = 0
                 while i < half1.count || i < half2.count {
                     if i < half1.count {
-                        nodeArray.append(half1[i])
+                        valueArray.append(half1[i])
                     }
                     if i < half2.count {
-                        nodeArray.append(half2[i])
+                        valueArray.append(half2[i])
                     }
                     i += 1
                 }
             }
         }
         
-        for i in nodeArray.indices {
-            let index = Int(arc4random() & 0x7FFF) % nodeArray.count
-            let hold = nodeArray[i]
-            nodeArray[i] = nodeArray[index]
-            nodeArray[index] = hold
+        for i in valueArray.indices {
+            let index = Int(arc4random() & 0x7FFF) % valueArray.count
+            let hold = valueArray[i]
+            valueArray[i] = valueArray[index]
+            valueArray[index] = hold
         }
     }
     
-    func shuffle(_ nodeArray: inout [RedBlackTreeNode]) {
-        guard nodeArray.count > 1 else { return }
-        for i in nodeArray.indices {
-            let index = Int(arc4random() & 0x7FFF) % nodeArray.count
-            let hold = nodeArray[i]
-            nodeArray[i] = nodeArray[index]
-            nodeArray[index] = hold
+    func shuffle(_ valueArray: inout [Int]) {
+        guard valueArray.count > 1 else { return }
+        for i in valueArray.indices {
+            let index = Int(arc4random() & 0x7FFF) % valueArray.count
+            let hold = valueArray[i]
+            valueArray[i] = valueArray[index]
+            valueArray[index] = hold
         }
     }
     
-    func allSubsets(_ nodeArray: [RedBlackTreeNode]) -> [[RedBlackTreeNode]] {
-        let nodeArray = nodeArray.sorted()
-        var result = [[RedBlackTreeNode]]()
-        result.append([RedBlackTreeNode]())
+    func allSubsets(_ valueArray: [Int]) -> [[Int]] {
+        let valueArray = valueArray.sorted()
+        var result = [[Int]]()
+        result.append([Int]())
         var i: Int = 0
-        while i < nodeArray.count {
+        while i < valueArray.count {
             var probe = i + 1
-            while probe < nodeArray.count && nodeArray[probe] == nodeArray[i] {
+            while probe < valueArray.count && valueArray[probe] == valueArray[i] {
                 probe += 1
             }
             let dupeCount = probe - i
@@ -1200,7 +1186,7 @@ class RedBlackTreeTests: XCTestCase {
             for n in 0..<resultCount {
                 var arr = result[n]
                 for _ in 0..<dupeCount {
-                    arr.append(nodeArray[i])
+                    arr.append(valueArray[i])
                     result.append(arr)
                 }
             }
@@ -1209,41 +1195,41 @@ class RedBlackTreeTests: XCTestCase {
         return result
     }
     
-    func allPermutions(_ nodeArray: [RedBlackTreeNode]) -> [[RedBlackTreeNode]] {
+    func allPermutions(_ valueArray: [Int]) -> [[Int]] {
         
-        var res = [[RedBlackTreeNode]]()
-        var nodeArray = nodeArray.sorted()
+        var res = [[Int]]()
+        var valueArray = valueArray.sorted()
         
         while true {
-            res.append(nodeArray)
+            res.append(valueArray)
             
-            var x = nodeArray.count - 2
-            while x >= 0 && nodeArray[x] >= nodeArray[x + 1] {
+            var x = valueArray.count - 2
+            while x >= 0 && valueArray[x] >= valueArray[x + 1] {
                 x -= 1
             }
             
             if x < 0 { break }
             
-            var successor = nodeArray[x + 1]
+            var successor = valueArray[x + 1]
             var successorIndex = x + 1
             
             var i = x + 1
             
-            while i < nodeArray.count {
-                if nodeArray[i] > nodeArray[x] && nodeArray[i] <= successor {
-                    successor = nodeArray[i]
+            while i < valueArray.count {
+                if valueArray[i] > valueArray[x] && valueArray[i] <= successor {
+                    successor = valueArray[i]
                     successorIndex = i
                 }
                 
                 i += 1
             }
             
-            nodeArray.swapAt(x, successorIndex)
+            valueArray.swapAt(x, successorIndex)
             
             var lo = x + 1
-            var hi = nodeArray.count - 1
+            var hi = valueArray.count - 1
             while lo < hi {
-                nodeArray.swapAt(lo, hi)
+                valueArray.swapAt(lo, hi)
                 lo += 1
                 hi -= 1
             }
