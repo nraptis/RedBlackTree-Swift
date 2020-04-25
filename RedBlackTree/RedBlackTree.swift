@@ -25,7 +25,7 @@
 // if you are building some type of fancy priority queue or combining
 // data structures into a custom container class.
 
-import UIKit
+import Foundation
 
 public class RedBlackTreeNode {
     
