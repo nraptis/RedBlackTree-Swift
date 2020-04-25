@@ -40,19 +40,20 @@ class RedBlackTreeTests: XCTestCase {
     }
     
     func testInsertion1() {
-        let bucket = RedBlackTree()
+        let tree = RedBlackTree()
         let node = spawn(5)
-        bucket.insert(node.clone())
+        tree.insert(node.clone())
     }
     
     func testInsertion2() {
         let masterList = generateSequence(15)
-        let bucket = RedBlackTree()
+        let tree = RedBlackTree()
         for node in masterList {
-            bucket.insert(node.clone())
+            tree.insert(node.clone())
         }
+        //
         for node in masterList {
-            if !bucket.search(node) {
+            if !tree.contains(node) {
                 XCTFail("couldnt find node \(node)")
                 return
             }
@@ -64,12 +65,12 @@ class RedBlackTreeTests: XCTestCase {
             let masterList = generateSequence(i)
             let permutations = allPermutions(masterList)
             for permutation in permutations {
-                let bucket = RedBlackTree()
+                let tree = RedBlackTree()
                 for node in permutation {
-                    bucket.insert(node.clone())
+                    tree.insert(node.clone())
                 }
                 for node in permutation {
-                    if !bucket.search(node) {
+                    if !tree.contains(node) {
                         XCTFail("couldnt find node \(node)")
                         return
                     }
@@ -85,13 +86,13 @@ class RedBlackTreeTests: XCTestCase {
                 masterList.reverse()
             }
             
-            let bucket = RedBlackTree()
+            let tree = RedBlackTree()
             for node in masterList {
-                bucket.insert(node.clone())
+                tree.insert(node.clone())
             }
             
             for node in masterList {
-                if !bucket.search(node) {
+                if !tree.contains(node) {
                     XCTFail("couldnt find node \(node)")
                     return
                 }
@@ -104,13 +105,13 @@ class RedBlackTreeTests: XCTestCase {
         for _ in 0..<50 {
             shuffle(&masterList)
             
-            let bucket = RedBlackTree()
+            let tree = RedBlackTree()
             for node in masterList {
-                bucket.insert(node.clone())
+                tree.insert(node.clone())
             }
             
             for node in masterList {
-                if !bucket.search(node) {
+                if !tree.contains(node) {
                     XCTFail("couldnt find node \(node)")
                     return
                 }
@@ -119,23 +120,23 @@ class RedBlackTreeTests: XCTestCase {
     }
     
     func testDeletion1() {
-        let bucket = RedBlackTree()
+        let tree = RedBlackTree()
         let node = spawn(5)
-        bucket.insert(node.clone())
-        bucket.remove(node.clone())
-        XCTAssertFalse(bucket.search(node.clone()))
+        tree.insert(node.clone())
+        tree.remove(node.clone())
+        XCTAssertFalse(tree.contains(node.clone()))
     }
     
     func testDeletion2() {
         let masterList = generateSequence(15)
         for node in masterList {
-            let bucket = RedBlackTree()
+            let tree = RedBlackTree()
             for insert in masterList {
-                bucket.insert(insert.clone())
+                tree.insert(insert.clone())
             }
             
-            bucket.remove(node.clone())
-            if bucket.search(node) {
+            tree.remove(node.clone())
+            if tree.contains(node) {
                 XCTFail("found deleted node \(node)")
                 return
             }
@@ -150,28 +151,28 @@ class RedBlackTreeTests: XCTestCase {
         let s3 = spawn(1)
         let s4 = spawn(3)
         
-        let bucket = RedBlackTree()
+        let tree = RedBlackTree()
         
-        bucket.insert(s1.clone())
-        bucket.insert(s2.clone())
-        bucket.insert(s3.clone())
-        bucket.insert(s4.clone())
+        tree.insert(s1.clone())
+        tree.insert(s2.clone())
+        tree.insert(s3.clone())
+        tree.insert(s4.clone())
         
-        bucket.remove(s1.clone())
+        tree.remove(s1.clone())
         
-        if bucket.search(s1) {
+        if tree.contains(s1) {
             XCTFail("found deleted node \(s1)")
         }
         
-        if !bucket.search(s2) {
+        if !tree.contains(s2) {
             XCTFail("lost inserted node \(s2)")
         }
         
-        if !bucket.search(s3) {
+        if !tree.contains(s3) {
             XCTFail("lost inserted node \(s3)")
         }
         
-        if !bucket.search(s4) {
+        if !tree.contains(s4) {
             XCTFail("lost inserted node \(s4)")
         }
     }
@@ -184,32 +185,32 @@ class RedBlackTreeTests: XCTestCase {
         let s4 = spawn(1)
         let s5 = spawn(4)
         
-        let bucket = RedBlackTree()
+        let tree = RedBlackTree()
         
-        bucket.insert(s1.clone())
-        bucket.insert(s2.clone())
-        bucket.insert(s3.clone())
-        bucket.insert(s4.clone())
-        bucket.insert(s5.clone())
-        bucket.remove(s1.clone())
+        tree.insert(s1.clone())
+        tree.insert(s2.clone())
+        tree.insert(s3.clone())
+        tree.insert(s4.clone())
+        tree.insert(s5.clone())
+        tree.remove(s1.clone())
         
-        if bucket.search(s1) {
+        if tree.contains(s1) {
             XCTFail("found deleted node \(s1)")
         }
         
-        if !bucket.search(s2) {
+        if !tree.contains(s2) {
             XCTFail("lost inserted node \(s2)")
         }
         
-        if !bucket.search(s3) {
+        if !tree.contains(s3) {
             XCTFail("lost inserted node \(s3)")
         }
         
-        if !bucket.search(s4) {
+        if !tree.contains(s4) {
             XCTFail("lost inserted node \(s4)")
         }
         
-        if !bucket.search(s5) {
+        if !tree.contains(s5) {
             XCTFail("lost inserted node \(s4)")
         }
     }
@@ -220,24 +221,24 @@ class RedBlackTreeTests: XCTestCase {
         let s2 = spawn(2)
         let s3 = spawn(0)
         
-        let bucket = RedBlackTree()
+        let tree = RedBlackTree()
         
-        bucket.insert(s1.clone())
-        bucket.insert(s2.clone())
-        bucket.insert(s3.clone())
+        tree.insert(s1.clone())
+        tree.insert(s2.clone())
+        tree.insert(s3.clone())
         
-        bucket.remove(s3.clone())
-        bucket.remove(s1.clone())
+        tree.remove(s3.clone())
+        tree.remove(s1.clone())
         
-        if bucket.search(s1) {
+        if tree.contains(s1) {
             XCTFail("found deleted node \(s1)")
         }
         
-        if !bucket.search(s2) {
+        if !tree.contains(s2) {
             XCTFail("lost inserted node \(s2)")
         }
         
-        if bucket.search(s3) {
+        if tree.contains(s3) {
             XCTFail("found deleted node \(s1)")
         }
     }
@@ -251,39 +252,39 @@ class RedBlackTreeTests: XCTestCase {
         let s5 = spawn(3)
         let s6 = spawn(4)
         
-        let bucket = RedBlackTree()
+        let tree = RedBlackTree()
         
-        bucket.insert(s1.clone())
-        bucket.insert(s2.clone())
-        bucket.insert(s3.clone())
-        bucket.insert(s4.clone())
-        bucket.insert(s5.clone())
-        bucket.insert(s6.clone())
+        tree.insert(s1.clone())
+        tree.insert(s2.clone())
+        tree.insert(s3.clone())
+        tree.insert(s4.clone())
+        tree.insert(s5.clone())
+        tree.insert(s6.clone())
         
-        bucket.remove(s3.clone())
-        bucket.remove(s5.clone())
+        tree.remove(s3.clone())
+        tree.remove(s5.clone())
         
-        if bucket.search(s3) {
+        if tree.contains(s3) {
             XCTFail("found deleted node \(s3)")
         }
         
-        if bucket.search(s5) {
+        if tree.contains(s5) {
             XCTFail("found deleted node \(s5)")
         }
         
-        if !bucket.search(s1) {
+        if !tree.contains(s1) {
             XCTFail("lost inserted node \(s1)")
         }
         
-        if !bucket.search(s2) {
+        if !tree.contains(s2) {
             XCTFail("lost inserted node \(s2)")
         }
         
-        if !bucket.search(s4) {
+        if !tree.contains(s4) {
             XCTFail("lost inserted node \(s4)")
         }
         
-        if bucket.search(s5) {
+        if tree.contains(s5) {
             XCTFail("found deleted node \(s5)")
         }
     }
@@ -295,28 +296,28 @@ class RedBlackTreeTests: XCTestCase {
         let s3 = spawn(3)
         let s4 = spawn(0)
         
-        let bucket = RedBlackTree()
+        let tree = RedBlackTree()
         
-        bucket.insert(s1.clone())
-        bucket.insert(s2.clone())
-        bucket.insert(s3.clone())
-        bucket.insert(s4.clone())
+        tree.insert(s1.clone())
+        tree.insert(s2.clone())
+        tree.insert(s3.clone())
+        tree.insert(s4.clone())
         
-        bucket.remove(s2.clone())
+        tree.remove(s2.clone())
         
-        if bucket.search(s2) {
+        if tree.contains(s2) {
             XCTFail("found deleted node \(s2)")
         }
         
-        if !bucket.search(s1) {
+        if !tree.contains(s1) {
             XCTFail("lost inserted node \(s1)")
         }
         
-        if !bucket.search(s3) {
+        if !tree.contains(s3) {
             XCTFail("lost inserted node \(s3)")
         }
         
-        if !bucket.search(s4) {
+        if !tree.contains(s4) {
             XCTFail("lost inserted node \(s4)")
         }
     }
@@ -330,14 +331,14 @@ class RedBlackTreeTests: XCTestCase {
                 for deletionTarget in masterList {
                     let clone = deletionTarget.clone()
                     
-                    let bucket = RedBlackTree()
+                    let tree = RedBlackTree()
                     for node in permutation {
-                        bucket.insert(node.clone())
+                        tree.insert(node.clone())
                     }
                     
-                    bucket.remove(clone)
+                    tree.remove(clone)
                     
-                    if bucket.search(clone) {
+                    if tree.contains(clone) {
                         XCTFail("found deleted node \(clone) \(permutation) {\(clone)}")
                         return
                     }
@@ -357,20 +358,20 @@ class RedBlackTreeTests: XCTestCase {
                     for deletionTarget2 in masterList where deletionTarget2 != deletionTarget1 {
                         let clone2 = deletionTarget2.clone()
                         
-                        let bucket = RedBlackTree()
+                        let tree = RedBlackTree()
                         for node in permutation {
-                            bucket.insert(node.clone())
+                            tree.insert(node.clone())
                         }
                         
-                        bucket.remove(clone1)
-                        bucket.remove(clone2)
+                        tree.remove(clone1)
+                        tree.remove(clone2)
                         
-                        if bucket.search(clone1) {
+                        if tree.contains(clone1) {
                             XCTFail("found deleted node 1 \(clone1)")
                             return
                         }
                         
-                        if bucket.search(clone2) {
+                        if tree.contains(clone2) {
                             XCTFail("found deleted node 2 \(clone2)")
                             return
                         }
@@ -381,28 +382,39 @@ class RedBlackTreeTests: XCTestCase {
     }
     
     func testBSTAddLargeSequence() {
-        var masterList = generateSequence(25000)
-        shuffle(&masterList)
-        let bucket = RedBlackTree()
-        for node in masterList {
-            bucket.insert(node.clone())
+        for _ in 0..<20 {
+            var masterList = generateSequence(25000)
+            shuffle(&masterList)
+            let tree = RedBlackTree()
+            for node in masterList {
+                tree.insert(node.clone())
+            }
+            
+            for node in masterList {
+                if !tree.contains(node) {
+                    XCTFail("node not founnd 1 \(node)")
+                    return
+                }
+            }
         }
     }
     
     func testBSTAddDeleteLargeSequence() {
-        var masterList = generateSequence(25000)
-        shuffle(&masterList)
-        let bucket = RedBlackTree()
-        for node in masterList {
-            bucket.insert(node.clone())
-        }
-        shuffle(&masterList)
-        for node in masterList {
-            bucket.remove(node.clone())
-        }
-        if bucket.count > 0 {
-            XCTFail("Failed to delete all 1M nodes")
-            return
+        for _ in 0..<20 {
+            var masterList = generateSequence(25000)
+            shuffle(&masterList)
+            let tree = RedBlackTree()
+            for node in masterList {
+                tree.insert(node.clone())
+            }
+            shuffle(&masterList)
+            for node in masterList {
+                tree.remove(node.clone())
+            }
+            if tree.count > 0 {
+                XCTFail("Failed to delete all 1M nodes")
+                return
+            }
         }
     }
     
@@ -420,27 +432,27 @@ class RedBlackTreeTests: XCTestCase {
                 let deleteSets = allSubsets(masterList)
                 for deleteList in deleteSets {
                     
-                    let bucket = RedBlackTree()
+                    let tree = RedBlackTree()
                     for node in masterList {
-                        bucket.insert(node.clone())
+                        tree.insert(node.clone())
                     }
                     
                     let deleteSet = Set<RedBlackTreeNode>(deleteList)
                     let keepSet = Set<RedBlackTreeNode>(masterList).subtracting(deleteSet)
                     
                     for node in deleteSet {
-                        bucket.remove(node.clone())
+                        tree.remove(node.clone())
                     }
                     
                     for node in keepSet {
-                        if !bucket.search(node) {
+                        if !tree.contains(node) {
                             XCTFail("missing keep node iter \(i) \(node) ks: \(keepSet) ds: \(deleteSet), ml: \(masterList)")
                             return
                         }
                     }
                     
                     for node in deleteSet {
-                        if bucket.search(node) {
+                        if tree.contains(node) {
                             XCTFail("retaining delete node iter \(i) \(node) ks: \(keepSet) ds: \(deleteSet), ml: \(masterList)")
                             return
                         }
@@ -455,23 +467,23 @@ class RedBlackTreeTests: XCTestCase {
         for _ in 0..<2000 {
             let masterList = generateMediumOrShortSequence()
             
-            let bucket = RedBlackTree()
+            let tree = RedBlackTree()
             for node in masterList {
-                bucket.insert(node.clone())
+                tree.insert(node.clone())
             }
             
             for node in masterList {
-                bucket.remove(node.clone())
+                tree.remove(node.clone())
             }
             
             for node in masterList {
-                if bucket.search(node) {
+                if tree.contains(node) {
                     XCTFail("node was retained ml: \(masterList)")
                     return
                 }
             }
             
-            if bucket.count > 0 {
+            if tree.count > 0 {
                 XCTFail("wrong count")
                 return
             }
@@ -482,25 +494,25 @@ class RedBlackTreeTests: XCTestCase {
         for _ in 0..<5000 {
             var masterList = generateMediumOrShortSequence()
             
-            let bucket = RedBlackTree()
+            let tree = RedBlackTree()
             for node in masterList {
-                bucket.insert(node.clone())
+                tree.insert(node.clone())
             }
             
             shuffle(&masterList)
             
             for node in masterList {
-                bucket.remove(node.clone())
+                tree.remove(node.clone())
             }
             
             for node in masterList {
-                if bucket.search(node) {
+                if tree.contains(node) {
                     XCTFail("node was retained ml: \(masterList)")
                     return
                 }
             }
             
-            if bucket.count > 0 {
+            if tree.count > 0 {
                 XCTFail("wrong count")
                 return
             }
@@ -512,9 +524,9 @@ class RedBlackTreeTests: XCTestCase {
             var masterList = generateMediumOrShortSequence()
             
             //Add all the nodes...
-            let bucket = RedBlackTree()
+            let tree = RedBlackTree()
             for node in masterList {
-                bucket.insert(node.clone())
+                tree.insert(node.clone())
             }
             
             var half1 = [RedBlackTreeNode]()
@@ -523,12 +535,12 @@ class RedBlackTreeTests: XCTestCase {
             
             // delete everything from half 1, make sure they are gone...
             for node in half1 {
-                bucket.remove(node.clone())
+                tree.remove(node.clone())
             }
             
             //everything in half 2 should still be here...
             for node in half2 {
-                if !bucket.search(node) {
+                if !tree.contains(node) {
                     XCTFail("missing keep node")
                     return
                 }
@@ -536,7 +548,7 @@ class RedBlackTreeTests: XCTestCase {
             
             //everything in half 1 should be gone...
             for node in half1 {
-                if bucket.search(node) {
+                if tree.contains(node) {
                     XCTFail("retaining delete node")
                     return
                 }
@@ -544,12 +556,12 @@ class RedBlackTreeTests: XCTestCase {
             
             // re-add everything from half 1, make sure they are here...
             for node in half1 {
-                bucket.insert(node.clone())
+                tree.insert(node.clone())
             }
             
             //everything in half 1 should be here...
             for node in half1 {
-                if !bucket.search(node) {
+                if !tree.contains(node) {
                     XCTFail("missing keep node")
                     return
                 }
@@ -557,12 +569,12 @@ class RedBlackTreeTests: XCTestCase {
             
             //Delete everything from half 1 again...
             for node in half1 {
-                bucket.remove(node.clone())
+                tree.remove(node.clone())
             }
             
             //everything in half 1 should be gone...
             for node in half1 {
-                if bucket.search(node) {
+                if tree.contains(node) {
                     XCTFail("retaining delete node")
                     return
                 }
@@ -570,7 +582,7 @@ class RedBlackTreeTests: XCTestCase {
             
             //everything in half 2 should still be here...
             for node in half2 {
-                if !bucket.search(node) {
+                if !tree.contains(node) {
                     XCTFail("missing keep node")
                     return
                 }
@@ -578,11 +590,11 @@ class RedBlackTreeTests: XCTestCase {
             
             //Delete everything from half 2
             for node in half2 {
-                bucket.remove(node.clone())
+                tree.remove(node.clone())
             }
             
             //Everything should be gone.
-            if bucket.count > 0 || bucket._root !== nil {
+            if tree.count > 0 || tree._root !== nil {
                 XCTFail("not empty, should be...")
             }
         }
@@ -590,11 +602,11 @@ class RedBlackTreeTests: XCTestCase {
     
     func testPopMinBasic() {
         
-        let bucket = RedBlackTree()
+        let tree = RedBlackTree()
         for length in 1..<10 {
             let masterList = generateSequence(length)
             for node in masterList {
-                bucket.insert(node.clone())
+                tree.insert(node.clone())
             }
             
             var sortedList = Array(masterList.reversed())
@@ -603,7 +615,7 @@ class RedBlackTreeTests: XCTestCase {
             while i >= 0 {
                 
                 let expectedMin = sortedList.removeLast()
-                let actualMin = bucket.popMin()!
+                let actualMin = tree.popMin()!
                 if expectedMin != actualMin {
                     XCTFail("Wrong min. \(actualMin) (actual) vs \(expectedMin) (expected)")
                 }
@@ -611,7 +623,7 @@ class RedBlackTreeTests: XCTestCase {
                 i -= 1
             }
             
-            if bucket.popMin() !== nil {
+            if tree.popMin() !== nil {
                 XCTFail("Dangling min.")
             }
         }
@@ -625,9 +637,9 @@ class RedBlackTreeTests: XCTestCase {
             
             shuffle(&masterList)
             
-            let bucket = RedBlackTree()
+            let tree = RedBlackTree()
             for node in masterList {
-                bucket.insert(node.clone())
+                tree.insert(node.clone())
             }
             
             var sortedList = Array(masterList.sorted().reversed())
@@ -635,7 +647,7 @@ class RedBlackTreeTests: XCTestCase {
             var i = sortedList.count - 1
             while i >= 0 {
                 let expectedMin = sortedList.removeLast()
-                let actualMin = bucket.popMin()!
+                let actualMin = tree.popMin()!
                 if expectedMin != actualMin {
                     XCTFail("Wrong min. \(actualMin) (actual) vs \(expectedMin) (expected)")
                 }
@@ -643,18 +655,18 @@ class RedBlackTreeTests: XCTestCase {
                 i -= 1
             }
             
-            if bucket.popMin() !== nil {
+            if tree.popMin() !== nil {
                 XCTFail("Dangling min.")
             }
         }
     }
     
     func testPopMaxBasic() {
-        let bucket = RedBlackTree()
+        let tree = RedBlackTree()
         for length in 1..<10 {
             let masterList = generateSequence(length)
             for node in masterList {
-                bucket.insert(node.clone())
+                tree.insert(node.clone())
             }
             
             var sortedList = Array(masterList)
@@ -663,7 +675,7 @@ class RedBlackTreeTests: XCTestCase {
             while i >= 0 {
                 
                 let expectedMax = sortedList.removeLast()
-                let actualMax = bucket.popMax()!
+                let actualMax = tree.popMax()!
                 if expectedMax != actualMax {
                     XCTFail("Wrong max. \(actualMax) (actual) vs \(expectedMax) (expected)")
                 }
@@ -671,7 +683,7 @@ class RedBlackTreeTests: XCTestCase {
                 i -= 1
             }
             
-            if bucket.popMax() !== nil {
+            if tree.popMax() !== nil {
                 XCTFail("Dangling max.")
             }
         }
@@ -684,9 +696,9 @@ class RedBlackTreeTests: XCTestCase {
             
             shuffle(&masterList)
             
-            let bucket = RedBlackTree()
+            let tree = RedBlackTree()
             for node in masterList {
-                bucket.insert(node.clone())
+                tree.insert(node.clone())
             }
             
             var sortedList = Array(masterList.sorted())
@@ -694,7 +706,7 @@ class RedBlackTreeTests: XCTestCase {
             var i = sortedList.count - 1
             while i >= 0 {
                 let expectedMax = sortedList.removeLast()
-                let actualMax = bucket.popMax()!
+                let actualMax = tree.popMax()!
                 if expectedMax != actualMax {
                     XCTFail("Wrong max. \(actualMax) (actual) vs \(expectedMax) (expected)")
                     return
@@ -703,7 +715,7 @@ class RedBlackTreeTests: XCTestCase {
                 i -= 1
             }
             
-            if bucket.popMax() !== nil {
+            if tree.popMax() !== nil {
                 XCTFail("Dangling max.")
                 return
             }
@@ -715,73 +727,73 @@ class RedBlackTreeTests: XCTestCase {
         var addedSet = Set<RedBlackTreeNode>()
         var deletedSet = Set<RedBlackTreeNode>()
         var spawnIndex: Int = 0
-        var bucket = RedBlackTree()
+        var tree = RedBlackTree()
         
-        automatonAddSomeNodes(&bucket, &addedSet, &deletedSet, &spawnIndex)
+        automatonAddSomeNodes(&tree, &addedSet, &deletedSet, &spawnIndex)
         
         for _ in 0..<80 {
             let operation = Int(arc4random() & 0x7FFF) % 6
             if operation == 0 {
-                automatonAddSomeNodes(&bucket, &addedSet, &deletedSet, &spawnIndex)
+                automatonAddSomeNodes(&tree, &addedSet, &deletedSet, &spawnIndex)
             } else if operation == 1 {
-                automatonDeleteSomeNodes(&bucket, &addedSet, &deletedSet, &spawnIndex)
+                automatonDeleteSomeNodes(&tree, &addedSet, &deletedSet, &spawnIndex)
             } else if operation == 2 {
-                automatonPopMin(&bucket, &addedSet, &deletedSet, &spawnIndex)
+                automatonPopMin(&tree, &addedSet, &deletedSet, &spawnIndex)
             } else if operation == 3 {
-                automatonPopMax(&bucket, &addedSet, &deletedSet, &spawnIndex)
+                automatonPopMax(&tree, &addedSet, &deletedSet, &spawnIndex)
             } else if operation == 4 {
-                automatonReAddDeletedNodes(&bucket, &addedSet, &deletedSet, &spawnIndex)
+                automatonReAddDeletedNodes(&tree, &addedSet, &deletedSet, &spawnIndex)
             }
         }
         
-        while bucket.count > 0 {
+        while tree.count > 0 {
             if (Int(arc4random() & 0x7FFF) % 2) == 0 {
-                automatonAddSomeNodes(&bucket, &addedSet, &deletedSet, &spawnIndex)
+                automatonAddSomeNodes(&tree, &addedSet, &deletedSet, &spawnIndex)
             }
             
             if (Int(arc4random() & 0x7FFF) % 2) == 0 {
-                automatonReAddDeletedNodes(&bucket, &addedSet, &deletedSet, &spawnIndex)
+                automatonReAddDeletedNodes(&tree, &addedSet, &deletedSet, &spawnIndex)
             }
             
             if (Int(arc4random() & 0x7FFF) % 2) == 0 {
-                automatonPopMin(&bucket, &addedSet, &deletedSet, &spawnIndex)
+                automatonPopMin(&tree, &addedSet, &deletedSet, &spawnIndex)
             }
             
             if (Int(arc4random() & 0x7FFF) % 2) == 0 {
-                automatonPopMax(&bucket, &addedSet, &deletedSet, &spawnIndex)
+                automatonPopMax(&tree, &addedSet, &deletedSet, &spawnIndex)
             }
             
             if (Int(arc4random() & 0x7FFF) % 2) == 0 {
-                automatonDeleteSomeNodes(&bucket, &addedSet, &deletedSet, &spawnIndex)
+                automatonDeleteSomeNodes(&tree, &addedSet, &deletedSet, &spawnIndex)
             }
-            automatonPopMax(&bucket, &addedSet, &deletedSet, &spawnIndex)
-            automatonDeleteSomeNodes(&bucket, &addedSet, &deletedSet, &spawnIndex)
-            automatonPopMin(&bucket, &addedSet, &deletedSet, &spawnIndex)
+            automatonPopMax(&tree, &addedSet, &deletedSet, &spawnIndex)
+            automatonDeleteSomeNodes(&tree, &addedSet, &deletedSet, &spawnIndex)
+            automatonPopMin(&tree, &addedSet, &deletedSet, &spawnIndex)
             
             if (Int(arc4random() & 0x7FFF) % 2) == 0 {
-                automatonAddSomeNodes(&bucket, &addedSet, &deletedSet, &spawnIndex)
-            }
-            
-            if (Int(arc4random() & 0x7FFF) % 2) == 0 {
-                automatonPopMin(&bucket, &addedSet, &deletedSet, &spawnIndex)
+                automatonAddSomeNodes(&tree, &addedSet, &deletedSet, &spawnIndex)
             }
             
             if (Int(arc4random() & 0x7FFF) % 2) == 0 {
-                automatonPopMax(&bucket, &addedSet, &deletedSet, &spawnIndex)
+                automatonPopMin(&tree, &addedSet, &deletedSet, &spawnIndex)
             }
             
             if (Int(arc4random() & 0x7FFF) % 2) == 0 {
-                automatonDeleteSomeNodes(&bucket, &addedSet, &deletedSet, &spawnIndex)
+                automatonPopMax(&tree, &addedSet, &deletedSet, &spawnIndex)
             }
             
-            automatonDeleteSomeNodes(&bucket, &addedSet, &deletedSet, &spawnIndex)
-            automatonDeleteSomeNodes(&bucket, &addedSet, &deletedSet, &spawnIndex)
+            if (Int(arc4random() & 0x7FFF) % 2) == 0 {
+                automatonDeleteSomeNodes(&tree, &addedSet, &deletedSet, &spawnIndex)
+            }
+            
+            automatonDeleteSomeNodes(&tree, &addedSet, &deletedSet, &spawnIndex)
+            automatonDeleteSomeNodes(&tree, &addedSet, &deletedSet, &spawnIndex)
         }
     }
     
     /// Mark: Automata helpers.
     
-    func automatonAddSomeNodes(_ bucket: inout RedBlackTree,
+    func automatonAddSomeNodes(_ tree: inout RedBlackTree,
                                _ addedSet: inout Set<RedBlackTreeNode>,
                                _ deletedSet: inout Set<RedBlackTreeNode>,
                                _ spawnIndex: inout Int) {
@@ -793,17 +805,17 @@ class RedBlackTreeTests: XCTestCase {
         for _ in 0..<count {
             let node = spawn(spawnIndex)
             spawnIndex += 1
-            bucket.insert(node.clone())
-            if !bucket.search(node) {
+            tree.insert(node.clone())
+            if !tree.contains(node) {
                 XCTFail("Does not have inserted node")
                 return
             }
             addedSet.insert(node)
         }
-        automatonVerifyAll(&bucket, &addedSet, &deletedSet)
+        automatonVerifyAll(&tree, &addedSet, &deletedSet)
     }
     
-    func automatonDeleteSomeNodes(_ bucket: inout RedBlackTree,
+    func automatonDeleteSomeNodes(_ tree: inout RedBlackTree,
                                _ addedSet: inout Set<RedBlackTreeNode>,
                                _ deletedSet: inout Set<RedBlackTreeNode>,
                                _ spawnIndex: inout Int) {
@@ -814,8 +826,8 @@ class RedBlackTreeTests: XCTestCase {
         
         for _ in 0..<count {
             if let element = addedSet.randomElement() {
-                bucket.remove(element.clone())
-                if bucket.search(element) {
+                tree.remove(element.clone())
+                if tree.contains(element) {
                     XCTFail("Retained the deleted node")
                     return
                 }
@@ -825,10 +837,10 @@ class RedBlackTreeTests: XCTestCase {
             
         }
         
-        automatonVerifyAll(&bucket, &addedSet, &deletedSet)
+        automatonVerifyAll(&tree, &addedSet, &deletedSet)
     }
     
-    func automatonReAddDeletedNodes(_ bucket: inout RedBlackTree,
+    func automatonReAddDeletedNodes(_ tree: inout RedBlackTree,
                                _ addedSet: inout Set<RedBlackTreeNode>,
                                _ deletedSet: inout Set<RedBlackTreeNode>,
                                _ spawnIndex: inout Int) {
@@ -846,9 +858,9 @@ class RedBlackTreeTests: XCTestCase {
                 let item = deletedArray[index]
                 deletedSet.remove(item)
                 addedSet.insert(item)
-                bucket.insert(item.clone())
+                tree.insert(item.clone())
              
-                if !bucket.search(item) {
+                if !tree.contains(item) {
                     XCTFail("Does not have inserted node")
                     return
                 }
@@ -856,10 +868,10 @@ class RedBlackTreeTests: XCTestCase {
             index += 1
         }
         
-        automatonVerifyAll(&bucket, &addedSet, &deletedSet)
+        automatonVerifyAll(&tree, &addedSet, &deletedSet)
     }
     
-    func automatonAddAndDelete(_ bucket: inout RedBlackTree,
+    func automatonAddAndDelete(_ tree: inout RedBlackTree,
                                _ addedSet: inout Set<RedBlackTreeNode>,
                                _ deletedSet: inout Set<RedBlackTreeNode>,
                                _ spawnIndex: inout Int) {
@@ -875,8 +887,8 @@ class RedBlackTreeTests: XCTestCase {
             if type == 0 {
                 let node = spawn(spawnIndex)
                 spawnIndex += 1
-                bucket.insert(node.clone())
-                if !bucket.search(node) {
+                tree.insert(node.clone())
+                if !tree.contains(node) {
                     XCTFail("Does not have inserted node")
                     return
                 }
@@ -885,8 +897,8 @@ class RedBlackTreeTests: XCTestCase {
 
                 if let element = addedSet.randomElement() {
                     
-                    bucket.remove(element.clone())
-                    if bucket.search(element) {
+                    tree.remove(element.clone())
+                    if tree.contains(element) {
                         XCTFail("Retained the deleted node")
                         return
                     }
@@ -895,10 +907,10 @@ class RedBlackTreeTests: XCTestCase {
                 }
             }
         }
-        automatonVerifyAll(&bucket, &addedSet, &deletedSet)
+        automatonVerifyAll(&tree, &addedSet, &deletedSet)
     }
     
-    func automatonPopMin(_ bucket: inout RedBlackTree,
+    func automatonPopMin(_ tree: inout RedBlackTree,
     _ addedSet: inout Set<RedBlackTreeNode>,
     _ deletedSet: inout Set<RedBlackTreeNode>,
     _ spawnIndex: inout Int) {
@@ -912,14 +924,14 @@ class RedBlackTreeTests: XCTestCase {
         for _ in 0..<count {
             if sorted.count > 0 {
                 let expectedMin = sorted.removeLast()
-                let actualMin = bucket.popMin()!
+                let actualMin = tree.popMin()!
                 if expectedMin != actualMin {
                     XCTFail("Wrong min. \(actualMin) (actual) vs \(expectedMin) (expected)")
                     return
                 }
                 addedSet.remove(actualMin)
             } else {
-                let actualMin = bucket.popMin()
+                let actualMin = tree.popMin()
                 if actualMin !== nil {
                     XCTFail("Wrong min. \(actualMin!) (actual) vs NULL (expected)")
                     return
@@ -928,7 +940,7 @@ class RedBlackTreeTests: XCTestCase {
         }
     }
     
-    func automatonPopMax(_ bucket: inout RedBlackTree,
+    func automatonPopMax(_ tree: inout RedBlackTree,
     _ addedSet: inout Set<RedBlackTreeNode>,
     _ deletedSet: inout Set<RedBlackTreeNode>,
     _ spawnIndex: inout Int) {
@@ -939,14 +951,14 @@ class RedBlackTreeTests: XCTestCase {
             
             if sorted.count > 0 {
                 let expectedMax = sorted.removeLast()
-                let actualMax = bucket.popMax()!
+                let actualMax = tree.popMax()!
                 if expectedMax != actualMax {
                     XCTFail("Wrong max. \(actualMax) (actual) vs \(expectedMax) (expected)")
                     return
                 }
                 addedSet.remove(actualMax)
             } else {
-                let actualMax = bucket.popMax()
+                let actualMax = tree.popMax()
                 if actualMax !== nil {
                     XCTFail("Wrong max. \(actualMax!) (actual) vs NULL (expected)")
                     return
@@ -955,29 +967,29 @@ class RedBlackTreeTests: XCTestCase {
         }
     }
     
-    func automatonVerifyAll(_ bucket: inout RedBlackTree,
+    func automatonVerifyAll(_ tree: inout RedBlackTree,
                             _ addedSet: inout Set<RedBlackTreeNode>,
                             _ deletedSet: inout Set<RedBlackTreeNode>) {
-        automatonVerifyAdded(&bucket, &addedSet, &deletedSet)
-        automatonVerifyDeleted(&bucket, &addedSet, &deletedSet)
+        automatonVerifyAdded(&tree, &addedSet, &deletedSet)
+        automatonVerifyDeleted(&tree, &addedSet, &deletedSet)
     }
     
-    func automatonVerifyAdded(_ bucket: inout RedBlackTree,
+    func automatonVerifyAdded(_ tree: inout RedBlackTree,
                                _ addedSet: inout Set<RedBlackTreeNode>,
                                _ deletedSet: inout Set<RedBlackTreeNode>) {
         for node in addedSet {
-            if !bucket.search(node) {
+            if !tree.contains(node) {
                 XCTFail("Automata - failed to find added node")
                 return
             }
         }
     }
     
-    func automatonVerifyDeleted(_ bucket: inout RedBlackTree,
+    func automatonVerifyDeleted(_ tree: inout RedBlackTree,
                                _ addedSet: inout Set<RedBlackTreeNode>,
                                _ deletedSet: inout Set<RedBlackTreeNode>) {
         for node in deletedSet {
-            if bucket.search(node) {
+            if tree.contains(node) {
                 XCTFail("Automata - retained a deleted node")
                 return
             }

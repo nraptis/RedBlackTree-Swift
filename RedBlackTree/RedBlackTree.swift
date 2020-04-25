@@ -76,20 +76,253 @@ public class RedBlackTree {
 }
 
 extension RedBlackTree {
-    fileprivate func isRed(_ node: RedBlackTreeNode?) -> Bool {
+    
+    public func contains(_ target: RedBlackTreeNode?) -> Bool {
+        return _search(target) !== nil
+    }
+    
+    fileprivate func _search(_ target: RedBlackTreeNode?) -> RedBlackTreeNode! {
+        if let target = target {
+            var node: RedBlackTreeNode! = _root
+            while node != nil {
+                if node == target {
+                    return node
+                } else if target < node {
+                    node = node.left
+                } else {
+                    node = node.right
+                }
+            }
+        }
+        return nil
+    }
+}
+
+extension RedBlackTree {
+    
+    internal func insert(_ node: RedBlackTreeNode) {
+        _root = _insert(_root, node)
+        _root.color = 1
+        _count += 1
+    }
+    
+    internal func _insert(_ root: RedBlackTreeNode!, _ node: RedBlackTreeNode!) -> RedBlackTreeNode! {
+        
+        if root === nil {
+            node.color = 0
+            return node
+        }
+        
+        var root: RedBlackTreeNode! = root
+        
+        if node < root {
+            root.left = _insert(root.left, node)
+        } else if node > root {
+            root.right = _insert(root.right, node)
+        }
+        
+        if _isRed(root.right) && _isBlack(root.left) {
+            root = _rotateLeft(root)
+        }
+        
+        if _isRed(root.left) && _isRed(root.left.left) {
+            root = _rotateRight(root)
+        }
+        
+        if _isRed(root.left) && _isRed(root.right) {
+            _invertColors(root)
+        }
+        
+        return root
+    }
+}
+
+extension RedBlackTree {
+    internal func remove(_ target: RedBlackTreeNode?) {
+        if let node = _search(target) {
+            if _isBlack(_root.left) && _isBlack(_root.right) { _root.color = 0 }
+            _root = _remove(_root, node)
+            if _root !== nil { _root.color = 1 }
+            _count -= 1
+        }
+    }
+    
+    internal func _remove(_ root: RedBlackTreeNode, _ node: RedBlackTreeNode) -> RedBlackTreeNode? {
+        
+        var root: RedBlackTreeNode! = root
+        
+        if node < root {
+            if _isBlack(root.left) && _isBlack(root.left.left) {
+                root = _sendRedLeft(root)
+            }
+            root.left = _remove(root.left, node)
+            
+        } else {
+            if _isRed(root.left) {
+                root = _rotateRight(root)
+            }
+            
+            if node === root && root.right === nil {
+                return nil
+            }
+            
+            if _isBlack(root.right) && _isBlack(root.right.left) {
+                root = _sendRedRight(root)
+            }
+            
+            if node === root {
+                let transplant: RedBlackTreeNode! = _minElement(root.right)
+                root.value = transplant.value
+                root.right = _popMin(root.right)
+                
+            } else {
+                root.right = _remove(root.right, node)
+            }
+        }
+        return _balance(root)
+    }
+}
+
+extension RedBlackTree {
+    
+    public func minElement() -> RedBlackTreeNode? {
+        guard _root !== nil else {
+            return nil
+        }
+        
+        var result: RedBlackTreeNode! = _root
+        while result.left !== nil {
+            result = result.left
+        }
+        return result
+    }
+    
+    public func popMin() -> RedBlackTreeNode? {
+        
+        guard _root !== nil else {
+            return nil
+        }
+        
+        let result: RedBlackTreeNode! = minElement()
+        
+        if _isBlack(_root.left) && _isBlack(_root.right) {
+            _root.color = 0
+        }
+
+        _root = _popMin(_root)
+        
+        if _root !== nil {
+            _root.color = 1
+        }
+        
+        _count -= 1
+        return result
+    }
+    
+    fileprivate func _minElement(_ node: RedBlackTreeNode!) -> RedBlackTreeNode? {
+        var result: RedBlackTreeNode! = node
+        while result.left != nil {
+            result = result.left
+        }
+        return result
+    }
+    
+    fileprivate func _popMin(_ node: RedBlackTreeNode) -> RedBlackTreeNode? {
+        var node: RedBlackTreeNode! = node
+        
+        if node.left === nil {
+            return nil
+        }
+        
+        if _isBlack(node.left) && _isBlack(node.left.left) {
+            node = _sendRedLeft(node)
+        }
+        
+        node.left = _popMin(node.left)
+        return _balance(node)
+    }
+}
+
+extension RedBlackTree {
+    
+    public func maxElement() -> RedBlackTreeNode? {
+        
+        guard _root !== nil else {
+            return nil
+        }
+        
+        var result: RedBlackTreeNode! = _root
+        while result.right !== nil {
+            result = result.right
+        }
+        return result
+    }
+    
+    public func popMax() -> RedBlackTreeNode? {
+        
+        guard _root !== nil else {
+            return nil
+        }
+        
+        let result: RedBlackTreeNode! = maxElement()
+        
+        if _isBlack(_root.left) && _isBlack(_root.right) {
+            _root.color = 0
+        }
+
+        _root = _popMax(_root)
+        
+        if _root !== nil {
+            _root.color = 1
+        }
+        
+        _count -= 1
+        return result
+    }
+    
+    fileprivate func _maxElement(_ node: RedBlackTreeNode!) -> RedBlackTreeNode? {
+        var result: RedBlackTreeNode! = node
+        while result.right != nil {
+            result = result.right
+        }
+        return result
+    }
+
+    fileprivate func _popMax(_ node: RedBlackTreeNode) -> RedBlackTreeNode? {
+        var node: RedBlackTreeNode! = node
+        
+        if _isRed(node.left) {
+            node = _rotateRight(node)
+        }
+
+        if node.right === nil {
+            return nil
+        }
+
+        if _isBlack(node.right) && _isBlack(node.right.left) {
+            node = _sendRedRight(node)
+        }
+        
+        node.right = _popMax(node.right)
+        return _balance(node)
+    }
+}
+
+extension RedBlackTree {
+    fileprivate func _isRed(_ node: RedBlackTreeNode?) -> Bool {
         if let node = node {
             return node.color == 0
         }
         return false
     }
-    fileprivate func isBlack(_ node: RedBlackTreeNode?) -> Bool {
+    fileprivate func _isBlack(_ node: RedBlackTreeNode?) -> Bool {
         if let node = node {
             return node.color == 1
         }
         return true
     }
     
-    fileprivate func invertColors(_ node: RedBlackTreeNode!) {
+    fileprivate func _invertColors(_ node: RedBlackTreeNode) {
         if node.color == 0 {
             node.color = 1
         } else {
@@ -112,7 +345,7 @@ extension RedBlackTree {
 
 extension RedBlackTree {
     
-    fileprivate func rotateRight(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
+    fileprivate func _rotateRight(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
         let transplant: RedBlackTreeNode! = node.left
         node.left = transplant.right
         transplant.right = node
@@ -121,7 +354,7 @@ extension RedBlackTree {
         return transplant
     }
 
-    fileprivate func rotateLeft(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
+    fileprivate func _rotateLeft(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
         let transplant: RedBlackTreeNode! = node.right
         node.right = transplant.left
         transplant.left = node
@@ -130,272 +363,40 @@ extension RedBlackTree {
         return transplant
     }
     
-    fileprivate func sendRedLeft(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
+    fileprivate func _sendRedLeft(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
         var node: RedBlackTreeNode! = node
-        invertColors(node)
-        if isRed(node.right.left) {
-            node.right = rotateRight(node.right)
-            node = rotateLeft(node)
-            invertColors(node)
+        _invertColors(node)
+        if _isRed(node.right.left) {
+            node.right = _rotateRight(node.right)
+            node = _rotateLeft(node)
+            _invertColors(node)
             
         }
         return node
     }
     
-    fileprivate func sendRedRight(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
+    fileprivate func _sendRedRight(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
         var node: RedBlackTreeNode! = node
-        invertColors(node)
-        if isRed(node.left.left) {
-            node = rotateRight(node)
-            invertColors(node)
+        _invertColors(node)
+        if _isRed(node.left.left) {
+            node = _rotateRight(node)
+            _invertColors(node)
             
         }
         return node
     }
     
-    fileprivate func rebalance(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
+    fileprivate func _balance(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
         var node: RedBlackTreeNode! = node
-        if isRed(node.right) {
-            node = rotateLeft(node)
+        if _isRed(node.right) {
+            node = _rotateLeft(node)
         }
-        if isRed(node.left) && isRed(node.left.left) {
-            node = rotateRight(node)
+        if _isRed(node.left) && _isRed(node.left.left) {
+            node = _rotateRight(node)
         }
-        if isRed(node.left) && isRed(node.right) {
-            invertColors(node)
+        if _isRed(node.left) && _isRed(node.right) {
+            _invertColors(node)
         }
         return node
     }
 }
-
-extension RedBlackTree {
-    
-    func search(_ target: RedBlackTreeNode?) -> Bool {
-        return searchInternal(target) !== nil
-    }
-    
-    func contains(_ target: RedBlackTreeNode?) -> Bool {
-        return searchInternal(target) !== nil
-    }
-    
-    func exists(_ target: RedBlackTreeNode?) -> Bool {
-        return searchInternal(target) !== nil
-    }
-    
-    fileprivate func searchInternal(_ target: RedBlackTreeNode?) -> RedBlackTreeNode! {
-        if let target = target {
-            var node: RedBlackTreeNode! = _root
-            while node != nil {
-                if node == target {
-                    return node
-                } else if target < node {
-                    node = node.left
-                } else {
-                    node = node.right
-                }
-            }
-        }
-        return nil
-    }
-}
-
-extension RedBlackTree {
-    
-    internal func insert(_ node: RedBlackTreeNode) {
-        _root = insertInternal(_root, node)
-        _root.color = 1
-        _count += 1
-    }
-    
-    internal func insertInternal(_ root: RedBlackTreeNode!, _ node: RedBlackTreeNode!) -> RedBlackTreeNode! {
-        
-        if root === nil {
-            node.color = 0
-            return node
-        }
-        
-        var root: RedBlackTreeNode! = root
-        
-        if node < root {
-            root.left = insertInternal(root.left, node)
-        } else if node > root {
-            root.right = insertInternal(root.right, node)
-        }
-        
-        if isRed(root.right) && isBlack(root.left) {
-            root = rotateLeft(root)
-        }
-        
-        if isRed(root.left) && isRed(root.left.left) {
-            root = rotateRight(root)
-        }
-        
-        if isRed(root.left) && isRed(root.right) {
-            invertColors(root)
-        }
-        
-        return root
-    }
-}
-
-extension RedBlackTree {
-    internal func remove(_ target: RedBlackTreeNode?) {
-        if let node = searchInternal(target) {
-            if isBlack(_root.left) && isBlack(_root.right) { _root.color = 0 }
-            _root = removeInternal(_root, node)
-            if _root !== nil { _root.color = 1 }
-            _count -= 1
-        }
-    }
-    
-    internal func removeInternal(_ root: RedBlackTreeNode!, _ node: RedBlackTreeNode!) -> RedBlackTreeNode! {
-        
-        var root: RedBlackTreeNode! = root
-        
-        if node < root {
-            if isBlack(root.left) && isBlack(root.left.left) {
-                root = sendRedLeft(root)
-            }
-            root.left = removeInternal(root.left, node)
-            
-        } else {
-            if isRed(root.left) {
-                root = rotateRight(root)
-            }
-            
-            if node === root && root.right === nil {
-                return nil
-            }
-            
-            if isBlack(root.right) && isBlack(root.right.left) {
-                root = sendRedRight(root)
-            }
-            
-            if node === root {
-                let transplant: RedBlackTreeNode! = minElement(root.right)
-                root.value = transplant.value
-                root.right = popMinInternal(root.right)
-                
-            } else {
-                root.right = removeInternal(root.right, node)
-            }
-        }
-        return rebalance(root)
-    }
-}
-
-extension RedBlackTree {
-    
-    func minElement() -> RedBlackTreeNode? {
-        guard _root !== nil else {
-            return nil
-        }
-        
-        var result: RedBlackTreeNode! = _root
-        while result.left !== nil {
-            result = result.left
-        }
-        return result
-    }
-    
-    fileprivate func minElement(_ node: RedBlackTreeNode!) -> RedBlackTreeNode! {
-        var result: RedBlackTreeNode! = node
-        while result.left != nil {
-            result = result.left
-        }
-        return result
-    }
-    
-    func popMin() -> RedBlackTreeNode? {
-        
-        guard _root !== nil else {
-            return nil
-        }
-        
-        let result: RedBlackTreeNode! = minElement()
-        
-        if isBlack(_root.left) && isBlack(_root.right) {
-            _root.color = 0
-        }
-
-        _root = popMinInternal(_root)
-        
-        if _root !== nil {
-            _root.color = 1
-        }
-        
-        _count -= 1
-        return result
-    }
-    
-    internal func popMinInternal(_ node: RedBlackTreeNode) -> RedBlackTreeNode! {
-        var node: RedBlackTreeNode! = node
-        
-        if node.left === nil {
-            return nil
-        }
-        
-        if isBlack(node.left) && isBlack(node.left.left) {
-            node = sendRedLeft(node)
-        }
-        
-        node.left = popMinInternal(node.left)
-        return rebalance(node)
-    }
-    
-    func maxElement() -> RedBlackTreeNode? {
-        
-        guard _root !== nil else {
-            return nil
-        }
-        
-        var result: RedBlackTreeNode! = _root
-        while result.right !== nil {
-            result = result.right
-        }
-        return result
-    }
-
-    func popMax() -> RedBlackTreeNode? {
-        
-        guard _root !== nil else {
-            return nil
-        }
-        
-        let result: RedBlackTreeNode! = maxElement()
-        
-        if isBlack(_root.left) && isBlack(_root.right) {
-            _root.color = 0
-        }
-
-        _root = popMaxInternal(_root)
-        
-        if _root !== nil {
-            _root.color = 1
-        }
-        
-        _count -= 1
-        return result
-    }
-    
-    internal func popMaxInternal(_ node: RedBlackTreeNode) -> RedBlackTreeNode! {
-        var node: RedBlackTreeNode! = node
-        
-        if isRed(node.left) {
-            node = rotateRight(node)
-        }
-
-        if node.right === nil {
-            return nil
-        }
-
-        if isBlack(node.right) && isBlack(node.right.left) {
-            node = sendRedRight(node)
-        }
-        
-        node.right = popMaxInternal(node.right)
-        return rebalance(node)
-    }
-}
-
-
