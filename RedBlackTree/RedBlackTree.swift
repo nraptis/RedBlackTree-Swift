@@ -22,8 +22,8 @@
 // Should you just use an array? Maybe. A red black tree will not give you
 // a noticable speed up or slow down, until your elements / operations
 // becomes a sufficiently high number. I would try the red black tree
-// if you are building some type of fancy priority queue. / combining
-// data structures.
+// if you are building some type of fancy priority queue or combining
+// data structures into a custom container class.
 
 import UIKit
 
