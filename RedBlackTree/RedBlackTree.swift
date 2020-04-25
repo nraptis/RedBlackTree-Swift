@@ -6,11 +6,24 @@
 //  Copyright © 2020 Nick Raptis. All rights reserved.
 //
 
-// This logic works, I guarantee it.
+// This logic works, I guarantee it. It is a left-leaning red black tree,
+// so there are no references to parent nodes. If you need to traverse
+// a sorted list in O(N) time, then you can add parent nodes.
 //
 // I don't take credit for inventing this, I have simply tested and combined
 // some other peoples' implementations until I finally arriving at a red/black
 // tree that could pass all of the unit tests that I built.
+//
+// A warning to the wise, this performs SLOWER than a basic array unless
+// you have a lot of elements. The real use case for it is popMin and popMax,
+// so it is great for a home brewed priority queue (one or two sides) where
+// elements are added or deleted at random intervals.
+//
+// Should you just use an array? Maybe. A red black tree will not give you
+// a noticable speed up or slow down, until your elements / operations
+// becomes a sufficiently high number. I would try the red black tree
+// if you are building some type of fancy priority queue. / combining
+// data structures.
 
 import UIKit
 
