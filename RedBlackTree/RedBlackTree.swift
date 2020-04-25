@@ -120,7 +120,7 @@ public class RedBlackTree {
         while result.right !== nil { result = result.right }
         return result.value
     }
-    
+
     public func popMax() -> Int? {
         guard _root !== nil else { return nil }
         let result: RedBlackTreeNode! = _maxElement()
@@ -156,27 +156,21 @@ extension RedBlackTree {
             node.color = 0
             return node
         }
-        
         var root = root!
-        
         if node.value < root.value {
             root.left = _insert(root.left, node)
         } else if node.value > root.value {
             root.right = _insert(root.right, node)
         }
-        
         if _isRed(root.right) && _isBlack(root.left) {
             root = _rotateLeft(root)
         }
-        
         if _isRed(root.left) && _isRed(root.left.left) {
             root = _rotateRight(root)
         }
-        
         if _isRed(root.left) && _isRed(root.right) {
             _invertColors(root)
         }
-        
         return root
     }
 }
@@ -190,20 +184,16 @@ extension RedBlackTree {
                 root = _sendRedLeft(root)
             }
             root.left = _remove(root.left, node)
-            
         } else {
             if _isRed(root.left) {
                 root = _rotateRight(root)
             }
-            
             if node === root && root.right === nil {
                 return nil
             }
-            
             if _isBlack(root.right) && _isBlack(root.right.left) {
                 root = _sendRedRight(root)
             }
-            
             if node === root {
                 let transplant: RedBlackTreeNode! = _minElement(root.right)
                 root.value = transplant.value
@@ -223,14 +213,12 @@ extension RedBlackTree {
         guard _root !== nil else {
             return nil
         }
-        
         var result: RedBlackTreeNode! = _root
         while result.left !== nil {
             result = result.left
         }
         return result
     }
-    
     fileprivate func _minElement(_ node: RedBlackTreeNode) -> RedBlackTreeNode? {
         var result: RedBlackTreeNode = node
         while result.left != nil {
@@ -238,18 +226,14 @@ extension RedBlackTree {
         }
         return result
     }
-    
     fileprivate func _popMin(_ node: RedBlackTreeNode) -> RedBlackTreeNode? {
         var node: RedBlackTreeNode = node
-        
         if node.left === nil {
             return nil
         }
-        
         if _isBlack(node.left) && _isBlack(node.left.left) {
             node = _sendRedLeft(node)
         }
-        
         node.left = _popMin(node.left)
         return _balance(node)
     }
@@ -267,7 +251,6 @@ extension RedBlackTree {
         }
         return result
     }
-    
     fileprivate func _maxElement(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
         var result = node
         while result.right != nil {
@@ -275,7 +258,6 @@ extension RedBlackTree {
         }
         return result
     }
-
     fileprivate func _popMax(_ node: RedBlackTreeNode) -> RedBlackTreeNode? {
         var node = node
         if _isRed(node.left) {
@@ -307,7 +289,6 @@ extension RedBlackTree {
         }
         return true
     }
-    
     fileprivate func _invertColors(_ node: RedBlackTreeNode) {
         if node.color == 0 {
             node.color = 1
@@ -337,7 +318,6 @@ extension RedBlackTree {
         transplant.right.color = 0
         return transplant
     }
-
     fileprivate func _rotateLeft(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
         let transplant: RedBlackTreeNode! = node.right
         node.right = transplant.left
@@ -346,7 +326,6 @@ extension RedBlackTree {
         transplant.left.color = 0
         return transplant
     }
-    
     fileprivate func _sendRedLeft(_ node: RedBlackTreeNode) -> RedBlackTreeNode {
         var node = node
         _invertColors(node)
@@ -354,7 +333,6 @@ extension RedBlackTree {
             node.right = _rotateRight(node.right)
             node = _rotateLeft(node)
             _invertColors(node)
-            
         }
         return node
     }
