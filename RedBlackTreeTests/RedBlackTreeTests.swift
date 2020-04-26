@@ -724,6 +724,392 @@ class RedBlackTreeTests: XCTestCase {
         }
     }
     
+    func testAddRemoveDuplicates1() {
+        let masterList = generateMediumSequenceWithDupes()
+        var cs = [Int: Int]()
+        let tree = RedBlackTree()
+        
+        for value in masterList {
+            tree.insert(value)
+            add(&cs, value)
+        }
+        
+        for value in masterList {
+            tree.remove(value)
+            delete(&cs, value)
+            
+            if contains(&cs, value) != tree.contains(value) {
+                XCTFail("Duplicate element mistmatch (tree = \(tree.contains(value))) (set = \(contains(&cs, value))) ele = \(value)")
+            }
+        }
+        
+        //func contains(_ set: inout [Int: Int], _ value: Int) ->
+        //func add(_ set: inout [Int: Int], _ value: Int) {
+        //    delete(_ set: inout [Int: Int], _ value: Int) {
+        
+    }
+    
+    func testAddRemoveDuplicates2() {
+        
+        for _ in 0..<100 {
+            var masterList = generateMediumOrShortSequenceWithDupes()
+            
+            var cs = [Int: Int]()
+            let tree = RedBlackTree()
+            
+            for value in masterList {
+                tree.insert(value)
+                add(&cs, value)
+            }
+            
+            shuffle(&masterList)
+            
+            for value in masterList {
+                tree.remove(value)
+                delete(&cs, value)
+                
+                if contains(&cs, value) != tree.contains(value) {
+                    XCTFail("Duplicate element mistmatch (tree = \(tree.contains(value))) (set = \(contains(&cs, value))) ele = \(value)")
+                }
+            }
+        }
+    }
+    
+    func testPopMinDeleteDupes() {
+        for _ in 0..<1000 {
+            let masterList = generateMediumOrShortSequenceWithDupes()
+            
+            var cs = [Int: Int]()
+            let tree = RedBlackTree()
+            
+            for value in masterList {
+                add(&cs, value)
+                tree.insert(value)
+            }
+            
+            let count = tree.count
+            guard count > 0 else {
+                continue
+            }
+            
+            for _ in 0..<count {
+                
+                var sorted = [Int]()
+                for (val, cnt) in cs {
+                    var i: Int = 0
+                    while i < cnt {
+                        sorted.append(val)
+                        i += 1
+                    }
+                }
+                
+                sorted.sort()
+                
+                guard sorted.count > 0 else {
+                    XCTFail("Duplicate element - dictran out of elements, unexpected")
+                    return
+                }
+                
+                guard tree.count > 0 else {
+                    XCTFail("Duplicate element - tree ran out of elements, unexpected")
+                    return
+                }
+                
+                let listMin = sorted.first!
+                let treeMin = tree.popMin()!
+                
+                if listMin != treeMin {
+                    XCTFail("Duplicate element popping - \(treeMin) [\(listMin) expected]")
+                }
+                
+                delete(&cs, listMin)
+            }
+        }
+    }
+    
+    func testPopMaxDeleteDupes() {
+        
+        for _ in 0..<1000 {
+            let masterList = generateMediumOrShortSequenceWithDupes()
+            
+            var cs = [Int: Int]()
+            let tree = RedBlackTree()
+            
+            for value in masterList {
+                add(&cs, value)
+                tree.insert(value)
+            }
+            
+            let count = tree.count
+            guard count > 0 else {
+                continue
+            }
+            
+            for _ in 0..<count {
+                
+                var sorted = [Int]()
+                for (val, cnt) in cs {
+                    var i: Int = 0
+                    while i < cnt {
+                        sorted.append(val)
+                        i += 1
+                    }
+                }
+                
+                sorted.sort()
+                
+                guard sorted.count > 0 else {
+                    XCTFail("Duplicate element - dictran out of elements, unexpected")
+                    return
+                }
+                
+                guard tree.count > 0 else {
+                    XCTFail("Duplicate element - tree ran out of elements, unexpected")
+                    return
+                }
+                
+                let listMax = sorted.last!
+                let treeMax = tree.popMax()!
+                
+                if listMax != treeMax {
+                    XCTFail("Duplicate element popping - \(treeMax) [\(listMax) expected]")
+                }
+                
+                delete(&cs, listMax)
+            }
+        }
+    }
+    
+    func testPopMaxOrPopMinDeleteDupes() {
+        
+        for _ in 0..<1000 {
+            let masterList = generateMediumOrShortSequenceWithDupes()
+            
+            var cs = [Int: Int]()
+            let tree = RedBlackTree()
+            
+            for value in masterList {
+                add(&cs, value)
+                tree.insert(value)
+            }
+            
+            let count = tree.count
+            guard count > 0 else {
+                continue
+            }
+            
+            for _ in 0..<count {
+                
+                var sorted = [Int]()
+                for (val, cnt) in cs {
+                    var i: Int = 0
+                    while i < cnt {
+                        sorted.append(val)
+                        i += 1
+                    }
+                }
+                
+                sorted.sort()
+                
+                guard sorted.count > 0 else {
+                    XCTFail("Duplicate element - dictran out of elements, unexpected")
+                    return
+                }
+                
+                guard tree.count > 0 else {
+                    XCTFail("Duplicate element - tree ran out of elements, unexpected")
+                    return
+                }
+                
+                if (Int(arc4random() & 0x7FFF) % 2) == 0 {
+                    let listMin = sorted.first!
+                    let treeMin = tree.popMin()!
+                    
+                    if listMin != treeMin {
+                        XCTFail("Duplicate element popping - \(treeMin) [\(listMin) expected]")
+                    }
+                    
+                    delete(&cs, listMin)
+                    
+                } else {
+                    let listMax = sorted.last!
+                    let treeMax = tree.popMax()!
+                    
+                    if listMax != treeMax {
+                        XCTFail("Duplicate element popping - \(treeMax) [\(listMax) expected]")
+                    }
+                    
+                    delete(&cs, listMax)
+                }
+            }
+        }
+    }
+    
+    func testDeleteOrPopMaxOrPopMinDeleteDupes() {
+        
+        for _ in 0..<165 {
+            var masterList = generateMediumOrShortSequenceWithDupes()
+            
+            var cs = [Int: Int]()
+            var tree = RedBlackTree()
+            
+            for value in masterList {
+                add(&cs, value)
+                tree.insert(value)
+            }
+            
+            let count = tree.count
+            guard count > 0 else {
+                continue
+            }
+            
+            for _ in 0..<count {
+                
+                var sorted = [Int]()
+                for (val, cnt) in cs {
+                    var i: Int = 0
+                    while i < cnt {
+                        sorted.append(val)
+                        i += 1
+                    }
+                }
+                
+                sorted.sort()
+                
+                guard sorted.count > 0 else {
+                    XCTFail("Duplicate element - dictran out of elements, unexpected")
+                    return
+                }
+                
+                guard tree.count > 0 else {
+                    XCTFail("Duplicate element - tree ran out of elements, unexpected")
+                    return
+                }
+                
+                let rindex = Int(arc4random() & 0x7FFF) % 3
+                
+                if rindex == 0 {
+                    let listMin = sorted.first!
+                    let treeMin = tree.popMin()!
+                    
+                    if listMin != treeMin {
+                        XCTFail("Duplicate element popping - \(treeMin) [\(listMin) expected]")
+                    }
+                    
+                    delete(&cs, listMin)
+                    
+                } else if rindex == 1 {
+                    let listMax = sorted.last!
+                    let treeMax = tree.popMax()!
+                    
+                    if listMax != treeMax {
+                        XCTFail("Duplicate element popping - \(treeMax) [\(listMax) expected]")
+                    }
+                    
+                    delete(&cs, listMax)
+                } else if rindex == 2 {
+                    let randomElement = sorted.randomElement()!
+                    
+                    tree.remove(randomElement)
+                    delete(&cs, randomElement)
+                    
+                    if contains(&cs, randomElement) != tree.contains(randomElement) {
+                        XCTFail("Delete value mismatch (tree = \(tree.contains(randomElement))) (set = \(contains(&cs, randomElement))) ele = \(randomElement)")
+                    }
+                }
+                
+                automatonDupesVerifyAll(&tree, &masterList, &cs)
+            }
+        }
+    }
+    
+    func testAddOrDeleteOrPopMaxOrPopMinDeleteDupes() {
+        
+        for _ in 0..<165 {
+            var masterList = generateMediumOrShortSequenceWithDupes()
+            
+            var cs = [Int: Int]()
+            var tree = RedBlackTree()
+            
+            for value in masterList {
+                add(&cs, value)
+                tree.insert(value)
+            }
+            
+            let count = tree.count
+            guard count > 0 else {
+                continue
+            }
+            
+            for _ in 0..<count {
+                
+                var sorted = [Int]()
+                for (val, cnt) in cs {
+                    var i: Int = 0
+                    while i < cnt {
+                        sorted.append(val)
+                        i += 1
+                    }
+                }
+                
+                sorted.sort()
+                
+                guard sorted.count > 0 else {
+                    XCTFail("Duplicate element - dictran out of elements, unexpected")
+                    return
+                }
+                
+                guard tree.count > 0 else {
+                    XCTFail("Duplicate element - tree ran out of elements, unexpected")
+                    return
+                }
+                
+                let rindex = Int(arc4random() & 0x7FFF) % 4
+                
+                if rindex == 0 {
+                    let listMin = sorted.first!
+                    let treeMin = tree.popMin()!
+                    
+                    if listMin != treeMin {
+                        XCTFail("Duplicate element popping - \(treeMin) [\(listMin) expected]")
+                    }
+                    
+                    delete(&cs, listMin)
+                    
+                } else if rindex == 1 {
+                    let listMax = sorted.last!
+                    let treeMax = tree.popMax()!
+                    
+                    if listMax != treeMax {
+                        XCTFail("Duplicate element popping - \(treeMax) [\(listMax) expected]")
+                    }
+                    
+                    delete(&cs, listMax)
+                } else if rindex == 3 {
+                    let randomElement = sorted.randomElement()!
+                    
+                    tree.remove(randomElement)
+                    delete(&cs, randomElement)
+                    
+                    if contains(&cs, randomElement) != tree.contains(randomElement) {
+                        XCTFail("Delete value mismatch (tree = \(tree.contains(randomElement))) (set = \(contains(&cs, randomElement))) ele = \(randomElement)")
+                    }
+                } else if rindex == 3 {
+                    
+                    var randomValue = Int(arc4random() & 0x7FFF) % 20
+                    
+                    if (Int(arc4random() & 0x7FFF) % 3) == 0 {
+                        randomValue = Int(arc4random() & 0x7FFF) % 500
+                    }
+                    
+                    tree.insert(randomValue)
+                    add(&cs, randomValue)
+                }
+                automatonDupesVerifyAll(&tree, &masterList, &cs)
+            }
+        }
+    }
+    
     func testAutomtonOperations() {
         
         var addedSet = Set<Int>()
@@ -994,7 +1380,47 @@ class RedBlackTreeTests: XCTestCase {
         }
     }
     
+    func automatonDupesVerifyAll(_ tree: inout RedBlackTree,
+                                 _ masterList: inout [Int],
+                                 _ set: inout [Int: Int]) {
+        for value in masterList {
+            if contains(&set, value) != tree.contains(value) {
+                XCTFail("Automata (dupes) - mismatch")
+            }
+            
+            if !tree.contains(value) {
+                return
+            }
+        }
+    }
+    
     /// Mark: Helpers
+    
+    func contains(_ set: inout [Int: Int], _ value: Int) -> Bool {
+        if let count = set[value] {
+            if count > 0 {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func add(_ set: inout [Int: Int], _ value: Int) {
+        if var count = set[value] {
+            count += 1
+            set[value] = count
+        } else {
+            set[value] = 1
+        }
+    }
+    
+    func delete(_ set: inout [Int: Int], _ value: Int) {
+        if var count = set[value] {
+            count -= 1
+            if count < 0 { count = 0 }
+            set[value] = count
+        }
+    }
     
     func generateSequence(_ sequenceCount: Int) -> [Int] {
         var result = [Int]()
@@ -1035,7 +1461,68 @@ class RedBlackTreeTests: XCTestCase {
         return result
     }
     
+    func generateShortSequenceWithDupes() -> [Int] {
+        let count = Int(arc4random() & 0x7FFF) % 12
+        var result = generateSequence(count)
+        addRandomDupes(&result)
+        stir(&result)
+        return result
+    }
+    
+    func generateMediumSequenceWithDupes() -> [Int] {
+        let count = Int(arc4random() & 0x7FFF) % 70 + 24
+        var result = generateSequence(count)
+        addRandomDupes(&result)
+        stir(&result)
+        return result
+    }
+    
+    func generateMediumOrShortSequenceWithDupes() -> [Int] {
+        if (Int(arc4random() & 0x7FFF) % 2) == 0 {
+            return generateShortSequenceWithDupes()
+        } else {
+            return generateMediumSequenceWithDupes()
+        }
+    }
+    
+    func generateLongSequenceWithDupes() -> [Int] {
+        let count = Int(arc4random() & 0x7FFF) % 2500 + 800
+        var result = generateSequence(count)
+        addRandomDupes(&result)
+        stir(&result)
+        return result
+    }
+    
+    func addRandomDupes(_ valueArray: inout [Int]) {
+        var result = [Int]()
+        for value in valueArray {
+            result.append(value)
+            if (Int(arc4random() & 0x7FFF) % 2) == 0 {
+                result.append(value)
+            }
+            if (Int(arc4random() & 0x7FFF) % 5) == 0 {
+                result.append(value)
+            }
+            if (Int(arc4random() & 0x7FFF) % 5) == 0 {
+                result.append(value)
+            }
+            if (Int(arc4random() & 0x7FFF) % 20) == 0 {
+                result.append(value)
+                result.append(value)
+                result.append(value)
+            }
+            if (Int(arc4random() & 0x7FFF) % 20) == 0 {
+                result.append(value)
+                result.append(value)
+                result.append(value)
+            }
+        }
+        valueArray.removeAll()
+        valueArray += result
+    }
+    
     func randomSplit(_ valueArray: inout [Int], half1: inout [Int], half2 : inout [Int]) {
+    
         
         half1.removeAll()
         half2.removeAll()

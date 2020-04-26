@@ -106,7 +106,7 @@ public class RedBlackTree {
     
     public func popMin() -> Int? {
         guard _root !== nil else { return nil }
-        let result: RedBlackTreeNode! = _minElement()
+        let result = _minElement()!
         if _isBlack(_root.left) && _isBlack(_root.right) { _root.color = 0 }
         _root = _popMin(_root)
         if _root !== nil { _root.color = 1 }
@@ -123,7 +123,7 @@ public class RedBlackTree {
 
     public func popMax() -> Int? {
         guard _root !== nil else { return nil }
-        let result: RedBlackTreeNode! = _maxElement()
+        let result = _maxElement()!
         if _isBlack(_root.left) && _isBlack(_root.right) { _root.color = 0 }
         _root = _popMax(_root)
         if _root !== nil { _root.color = 1 }
@@ -159,7 +159,7 @@ extension RedBlackTree {
         var root = root!
         if node.value < root.value {
             root.left = _insert(root.left, node)
-        } else if node.value > root.value {
+        } else {
             root.right = _insert(root.right, node)
         }
         if _isRed(root.right) && _isBlack(root.left) {
@@ -198,7 +198,6 @@ extension RedBlackTree {
                 let transplant: RedBlackTreeNode! = _minElement(root.right)
                 root.value = transplant.value
                 root.right = _popMin(root.right)
-                
             } else {
                 root.right = _remove(root.right, node)
             }
