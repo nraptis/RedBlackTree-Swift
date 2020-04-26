@@ -44,15 +44,6 @@ public class RedBlackTreeNode {
         self.value = value
     }
     
-    init() {
-        self.value = -1
-    }
-    
-    func clone() -> RedBlackTreeNode {
-        let result = RedBlackTreeNode(value)
-        return result
-    }
-    
     fileprivate var left: RedBlackTreeNode!
     fileprivate var right: RedBlackTreeNode!
     
